@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000;
+const bcrypt = require('bcrypt');
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://b022210033:NIZdxSrysZZaLbe4@cluster0.dcvg4k7.mongodb.net/?retryWrites=true&w=majority";
@@ -30,8 +31,8 @@ run().catch(console.dir);
 
 app.use(express.json())
 
-app.post('/register', (req, res) => 
-    const {username, password} = req.body;
+app.post('/register', (req, res) => {
+  const { username, password } = req.body;
     console.log(username, password);
 
     const hash = bcrypt.hashSync(password, 10);
@@ -44,6 +45,7 @@ app.post('/register', (req, res) =>
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   console.log(username, password);
+  const hash = bcrypt.hashSync(password, 10);
 
   client.db("HelloAzie").collection("User").findOne({"username": username, "password": hash}).then((User) => {
     console.log(User) 
