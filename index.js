@@ -41,6 +41,22 @@ app.post('/register', (req, res) =>
     res.send("register success");
 })
 
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  console.log(username, password);
+
+  client.db("HelloAzie").collection("User").findOne({"username": username, "password": hash}).then((User) => {
+    console.log(User) 
+
+    if(bcrypt.compareSync(password, User.password) == true){
+      res.send("login success");
+    } else {
+      res.send("login failed");
+    }
+  })
+
+})
+
 app.listen(port, () => {
 console.log(`Example app listening on port ${port}`)
 })
