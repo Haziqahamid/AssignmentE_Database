@@ -35,7 +35,7 @@ app.post('/register', (req, res) =>
     console.log(username, password);
 
     const hash = bcrypt.hashSync(password, 10);
-    
+    client.db("HelloAzie").collection("User")
     .insertOne({"username": username, "password": hash});
     
     res.send("register success");
