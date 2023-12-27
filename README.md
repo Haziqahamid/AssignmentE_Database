@@ -1,3 +1,2 @@
 # AssignmentE_Database
-# Hai
 # BENR2423 - DATABASE AND CLOUD SYSTEM
