@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000;
 const bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
+const util = require('./util.js');
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://b022210033:NIZdxSrysZZaLbe4@cluster0.dcvg4k7.mongodb.net/?retryWrites=true&w=majority";
@@ -58,6 +60,36 @@ app.post('/login', (req, res) => {
   })
 
 })
+
+app.post('/login', async (req, res) => {
+  console.log('login', req.body)
+
+  const {username, password} = req.body
+
+  client.db("HelloAzie").collection("User").find({"username": username, "password": hash}).then((result) => {
+    const user = result[0]
+
+    if (user) {
+      bcrypt.compare(password, user.password, function(err, result) {
+        if (result) {
+        
+          const token = jwt.sign({
+            user: username,
+            role: 'admin'
+          }, 'very-strong-password', {expiresIn: '1h'});
+        
+          res.send(token)
+
+        } else {
+          res.send('wrong password')
+        }
+      });
+    } else{
+      res.send('user not found')
+    }
+  });
+
+});
 
 app.listen(port, () => {
 console.log(`Example app listening on port ${port}`)
