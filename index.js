@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 1000;
 //const util = require('./util');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
+
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -31,6 +32,7 @@ async function run() {
   }
 }
 run().catch(console.dir);
+
 
 app.use(express.json())
 
