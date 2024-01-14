@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000;
-const AcademicAdministrator = require("./AcademicAdministrator");
+const AcademicAdministrator = require("./AcademicAdministrator.js");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
@@ -206,11 +206,11 @@ app.post('/addfaculty', async (req,res) => {
   const result = await AcademicAdmin.AddFaculty(FacultyData);
 
   res.json(result);
-});
+});*/
 
-app.post('/AddStudent', async (req, res) => {
+/*app.post('/AddStudent', async (req, res) => {
 	console.log(req.body);
-	if(req.user.role == "admin") {
+	if(req.body.role == "admin") {
 		const Student = await AcademicAdmin.AddStudent(req.body);
 		if (Student != null) {
 			console.log("Student Added");
@@ -222,9 +222,9 @@ app.post('/AddStudent', async (req, res) => {
 	} else {
 		res.status(403).send('Forbidden')
 	}
-})*/
+})
 
-/*app.post('/AddFaculty', async (req, res) => {
+app.post('/AddFaculty', async (req, res) => {
 	console.log(req.body);
 	if(req.user.role == "admin") {
 		const Faculty = await AcademicAdmin.AddFaculty(req.body);
@@ -239,6 +239,11 @@ app.post('/AddStudent', async (req, res) => {
 		res.status(403).send('Forbidden')
 	}
 })*/
+
+app.post('/AddStudent', async (req, res) => {
+	console.log(req.body);
+  AcademicAdministrator.AddStudent (req, res);
+})
 
 app.listen(port, () => {
 console.log(`Example app listening on port ${port}`)
