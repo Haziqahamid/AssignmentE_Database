@@ -242,7 +242,7 @@ app.listen(port, () => {
 console.log(`Example app listening on port ${port}`)
 })
 
-const jwt = require('jsonwebtoken');
+/*const jwt = require('jsonwebtoken');
 function generateAccessToken(payload) {
 	return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
 }
@@ -262,4 +262,4 @@ function verifyToken(req, res, next) {
 
 		next()
 	})
-}
+}*/
