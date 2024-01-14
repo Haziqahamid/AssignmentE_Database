@@ -1,6 +1,7 @@
+const AcademicAdministrator = require("./AcademicAdministrator");
 module.exports = AcademicAdministrator;
 
-class AcademicAdministrator{
+class Academic_Administrator{
   constructor(){
     this.Student = null;
     this.Faculty = null;

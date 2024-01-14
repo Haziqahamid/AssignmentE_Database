@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000;
-const AcademicAdministrator = require("./Academic Administrator");
+const AcademicAdministrator = require("./AcademicAdministrator");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
