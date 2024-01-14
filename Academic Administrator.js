@@ -33,4 +33,16 @@ class AcademicAdministrator{
       return client.db("Assignment").collection("User").find({"FacultyID": FacultyData.FacultyID}).toArray()
     }
 	}
+
+  async StudentList() {
+    client.db("Assignment").collection("User").find({
+    "username": {$eq: req.body.username}
+  }).toArray().then((result) => {
+    if (result.length > 0) {
+      res.status(400).send('View Successful')
+    } else {
+        res.send('No record')
+    }
+  })
+  }
 }

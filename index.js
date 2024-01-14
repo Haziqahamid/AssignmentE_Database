@@ -206,16 +206,32 @@ app.post('/addfaculty', async (req,res) => {
   res.json(result);
 });
 
-app.post('/createFaculty', async (req, res) => {
+app.post('/AddStudent', async (req, res) => {
 	console.log(req.body);
 	if(req.user.role == "admin") {
-		const facility = await Facility.createFacility(req.body);
-		if (facility != null) {
-			console.log("Facility created");
-			res.status(200).json(facility);
+		const Student = await AcademicAdmin.AddStudent(req.body);
+		if (Student != null) {
+			console.log("Student Added");
+			res.status(200).json(faculty);
 		} else {
-			console.log("Facility creation failed")
-			res.status(404).send("Facility already exists");
+			console.log("Student creation failed")
+			res.status(404).send("Student already exists");
+		}
+	} else {
+		res.status(403).send('Forbidden')
+	}
+})*/
+
+/*app.post('/AddFaculty', async (req, res) => {
+	console.log(req.body);
+	if(req.user.role == "admin") {
+		const Faculty = await AcademicAdmin.AddFaculty(req.body);
+		if (Faculty != null) {
+			console.log("Faculty Added");
+			res.status(200).json(faculty);
+		} else {
+			console.log("Faculty creation failed")
+			res.status(404).send("Faculty already exists");
 		}
 	} else {
 		res.status(403).send('Forbidden')
@@ -225,3 +241,25 @@ app.post('/createFaculty', async (req, res) => {
 app.listen(port, () => {
 console.log(`Example app listening on port ${port}`)
 })
+
+const jwt = require('jsonwebtoken');
+function generateAccessToken(payload) {
+	return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
+}
+
+function verifyToken(req, res, next) {
+	const authHeader = req.headers['authorization']
+	const token = authHeader && authHeader.split(' ')[1]
+
+	if (token == null) return res.sendStatus(401)
+
+	jwt.verify(token, "Assignment-GroupE", (err, user) => {
+		console.log(err)
+
+		if (err) return res.sendStatus(403)
+
+		req.user = user
+
+		next()
+	})
+}
