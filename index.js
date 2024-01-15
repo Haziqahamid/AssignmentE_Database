@@ -94,7 +94,26 @@ app.post('/login', async (req, res) => {
   });
 });
 
+app.post('/recordAttendance', async (req, res) => {
+  console.log(req.body);
 
+  const { matrix_no, subject, date, time } = req.body;
+
+  client.db("Assignment").collection('Attendance').insertOne({
+    matrix_no: matrix_no,
+    subject: subject,
+    date: date,
+    time: time,
+    status: 'Present'
+  }, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error recording attendance');
+    } else {
+      res.status(200).send('Attendance recorded successfully');
+    }
+  });
+});
 
 /*app.post('/login', (req, res) => {
   const { username, password } = req.body;
