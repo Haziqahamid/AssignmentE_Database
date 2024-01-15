@@ -33,10 +33,32 @@ async function run() {
 }
 run().catch(console.dir);
 
+app.use(verifyToken);
+
+function generateAccessToken(payload) {
+	return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
+}
+
+function verifyToken(req, res, next) {
+	const authHeader = req.headers['authorization']
+	const token = authHeader && authHeader.split(' ')[1]
+
+	if (token == null) return res.sendStatus(401)
+
+	jwt.verify(token, "Assignment-GroupE", (err, user) => {
+		console.log(err)
+
+		if (err) return res.sendStatus(403)
+
+		req.user = user
+
+		next()
+	})
+}
 
 app.use(express.json())
 
-app.post('/register', async (req, res) => {
+/*app.post('/register', async (req, res) => {
 
   client.db("Assignment").collection("User").find({
     "username": {$eq: req.body.username}
@@ -53,7 +75,17 @@ app.post('/register', async (req, res) => {
         res.send('Register Succesfully')
     }
   })
-})
+})*/
+
+app.post('/register', (req, res) => {
+  const { username, password, role } = req.body;
+    console.log(username, password, role);
+
+    const hash = bcrypt.hashSync(password, 10);
+    client.db("Assignment").collection("User").insertOne({"username": username, "password": hash, "role": role});
+    
+    res.send("register success");
+});
 
 app.post('/login', async (req, res) => {
   console.log('login', req.body);
@@ -69,8 +101,8 @@ app.post('/login', async (req, res) => {
         
           const token = jwt.sign({
             user: username,
-            role: 'admin'
-          }, 'very-strong-password', {expiresIn: '1h'});
+            role: "admin"
+          }, 'Assignment-GroupE', {expiresIn: '1h'});
         
           res.send(token)
 
@@ -105,15 +137,7 @@ app.post('/recordAttendance', async (req, res) => {
   });
 });
 
-/*app.post('/register', (req, res) => {
-  const { username, password, role } = req.body;
-    console.log(username, password, role);
 
-    const hash = bcrypt.hashSync(password, 10);
-    client.db("Assignment").collection("User").insertOne({"username": username, "password": hash, "role": role});
-    
-    res.send("register success");
-});*/
 
 /*app.post('/login', (req, res) => {
   const { username, password } = req.body;
