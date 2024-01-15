@@ -26,36 +26,45 @@ run().catch(console.dir);
 
 exports.AddStudent = function (req,res) {
   const { MatrixNo } = req.body;
-	const ExistingStudent = client.db("Assignment").collection("Student").find({"MatrixNo": MatrixNo});
+  client.db("Assignment").collection("Student").find({ "MatrixNo": MatrixNo }).toArray((err, result) => {
   
-  if (ExistingStudent) {
+  if (err) {
+    console.error(err);
     console.log("Student already exist.");
+    res.status(500).send('Student already exist.');
     return false;
   } 
   else {
     client.db("Assignment").collection("Student").insertOne();
     console.log ('Student added');
-    return client.db("Assignment").collection("Student").find({"MatrixNo": MatrixNo}).toArray()
+    res.status(200).json(result);
+    return result;
   }
+  })
 }
 
-exports.AddFaculty = function (req,res) {
-	const ExistingFaculty = client.db("Assignment").collection("User").find({"FacultyID": req.body.FacultyID});
-    
-  if (ExistingFaculty) {
-    console.log("Faculty already exist.");
+exports.AddLecturer = function (req,res) {
+  const { LecturerID } = req.body;
+  client.db("Assignment").collection("Lecturer").find({ "LecturerID": LecturerID }).toArray((err, result) => {
+  
+  if (err) {
+    console.error(err);
+    console.log("Lecturer already exist.");
+    res.status(500).send('Lecturer already exist.');
     return false;
   } 
   else {
-    const result = client.db("Assignment").collection("User").insertOne();
-    console.log ('Faculty added:', result[0]);
-    return client.db("Assignment").collection("User").find({"FacultyID": req.body.FacultyID}).toArray()
+    client.db("Assignment").collection("Lecturer").insertOne();
+    console.log ('Lecturer added');
+    res.status(200).json(result);
+    return result;
   }
+  })
 }
 
 exports.StudentList = function (req,res) {
-  client.db("Assignment").collection("User").find({
-  "username": {$eq: req.body.username}
+  client.db("Assignment").collection("Student").find({
+  "role": {$eq: req.body.Student}
   }).toArray().then((result) => {
   if (result.length > 0) {
     res.status(400).send('View Successful')

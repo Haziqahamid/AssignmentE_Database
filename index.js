@@ -53,17 +53,7 @@ app.post('/register', async (req, res) => {
         res.send('Register Succesfully')
     }
   })
-});
-
-/*app.post('/register', (req, res) => {
-  const { username, password, role } = req.body;
-    console.log(username, password, role);
-
-    const hash = bcrypt.hashSync(password, 10);
-    client.db("Assignment").collection("User").insertOne({"username": username, "password": hash, "role": role});
-    
-    res.send("register success");
-});*/
+})
 
 app.post('/login', async (req, res) => {
   console.log('login', req.body);
@@ -114,6 +104,16 @@ app.post('/recordAttendance', async (req, res) => {
     }
   });
 });
+
+/*app.post('/register', (req, res) => {
+  const { username, password, role } = req.body;
+    console.log(username, password, role);
+
+    const hash = bcrypt.hashSync(password, 10);
+    client.db("Assignment").collection("User").insertOne({"username": username, "password": hash, "role": role});
+    
+    res.send("register success");
+});*/
 
 /*app.post('/login', (req, res) => {
   const { username, password } = req.body;
