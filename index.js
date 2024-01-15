@@ -83,7 +83,8 @@ app.post('/register', (req, res) => {
 
     const hash = bcrypt.hashSync(password, 10);
     client.db("Assignment").collection("User").insertOne({"username": username, "password": hash, "role": role});
-    
+    console.log(hash);
+    console.log(req.headers.authorization)
     res.send("register success");
 });
 
