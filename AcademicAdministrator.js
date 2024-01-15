@@ -24,22 +24,46 @@ async function run() {
 }
 run().catch(console.dir);
 
+/*exports.AddStudent = function (req,res) {
+  const { MatrixNo } = req.body;
+  client.db("Assignment").collection("Student").find({ "MatrixNo": MatrixNo }).toArray().then((result) => {
+    const user = result[0]
+    if (user) {
+      user.compare(MatrixNo, user.MatrixNo, function(err, result) {
+        if (err) {
+          console.error(err);
+          console.log("Student already exist.");
+          res.status(500).send('Student already exist.');
+          return false;
+        } 
+        else {
+          client.db("Assignment").collection("Student").insertOne();
+          console.log ('Student added');
+          res.status(200).json(result);
+          return result;
+        }
+      });
+    } else{
+      res.send('Forbidden')
+    }
+  })
+}*/
+
 exports.AddStudent = function (req,res) {
   const { MatrixNo } = req.body;
-  client.db("Assignment").collection("Student").find({ "MatrixNo": MatrixNo }).toArray((err, result) => {
-  
-  if (err) {
-    console.error(err);
-    console.log("Student already exist.");
-    res.status(500).send('Student already exist.');
-    return false;
-  } 
-  else {
-    client.db("Assignment").collection("Student").insertOne();
-    console.log ('Student added');
-    res.status(200).json(result);
-    return result;
-  }
+  client.db("Assignment").collection("Student").find({ "MatrixNo": MatrixNo }).toArray().then((result) => {
+    const user = result[0]
+    if (user) {
+      console.log("Student already exist.");
+      res.status(500).send('Student already exist.');
+      return false;
+    } 
+    else {
+      client.db("Assignment").collection("Student").insertOne();
+      console.log ('Student added');
+      res.status(200).json(result);
+      return result;
+    }
   })
 }
 
