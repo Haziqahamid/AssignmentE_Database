@@ -96,6 +96,21 @@ app.post('/recordAttendance', async (req, res) => {
   });
 });
 
+
+// Function to view details and timeline of the attendance
+app.get('/attendanceDetails', async (req, res) => {
+  const matrix_no = req.params.matrix_no;
+
+  client.db("Assignment").collection('Attendance').find({ matrix_no: matrix_no }).toArray((err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error fetching attendance details');
+    } else {
+      res.status(200).json(result);
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
