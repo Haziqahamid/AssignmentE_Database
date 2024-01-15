@@ -3,9 +3,9 @@ const app = express()
 //const port = process.env.PORT || 3000;
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-const port = 3000; // Update the port as needed
+const port = 4000; // Update the port as needed
 
-app.use(express.json());
+app.use(express.json())
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://Assignment:lJfAGDdoR6APLWSC@cluster0.ruowk6x.mongodb.net/?retryWrites=true&w=majority";
@@ -98,13 +98,44 @@ app.post('/recordAttendance', async (req, res) => {
 
 
 // Function to view details and timeline of the attendance
-app.get('/attendanceDetails', async (req, res) => {
-  const matrix_no = req.params.matrix_no;
+//app.get('/attendanceDetails', async (req, res) => {
+  //const matrix_no = req.params.matrix_no;
 
-  client.db("Assignment").collection('Attendance').find({ matrix_no: matrix_no }).toArray((err, result) => {
+  //client.db("Assignment").collection('Attendance').find({ matrix_no: matrix_no }).toArray((err, result) => {
+    //if (err) {
+      //console.error(err);
+      //res.status(500).send('Error fetching attendance details');
+    //} else {
+      //res.status(200).json(result);
+   // }
+ // });
+//});
+
+// Function to view details and timeline of the attendance
+app.get('/attendanceDetails', async (req, res) => {
+  const matrix_no = req.query.matrix_no;
+
+  //if (!matrix_no) {
+    //return res.status(400).json({ error: 'Matrix number is required in the query parameters.' });
+  //}
+
+  client.db("Assignment").collection('Attendance').find({ matrix_no: matrix_no }).toArray()
+    .then(result => {
+      res.status(200).json(result);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error fetching attendance details' });
+    });
+});
+
+
+// Function to view full report of the recorded attendance
+app.get('/fullAttendanceReport', async (req, res) => {
+  client.db(dbName).collection('Attendance').find({}).toArray((err, result) => {
     if (err) {
       console.error(err);
-      res.status(500).send('Error fetching attendance details');
+      res.status(500).send('Error fetching full attendance report');
     } else {
       res.status(200).json(result);
     }
