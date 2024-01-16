@@ -107,11 +107,11 @@ app.post('/login', async (req, res) => {
         } else {
           res.send('wrong password')
         }
-      });
+      })
     } else {
       res.send('user not found')
     }
-  });
+  })
 });
 
 /*app.post('/student', async (req, res) => {
@@ -171,7 +171,7 @@ app.post('/recordAttendance', async (req, res) => {
     } else {
       res.status(200).send('Attendance recorded successfully');
     }
-  });
+  })
 });
 
 /*app.post('/register', async (req, res) => {
@@ -408,7 +408,12 @@ app.post('/Logout', async (req, res) => {
 
 app.post('/studentlogin', async (req, res) => {
   console.log(req.body);
-  student.studentlogin(req, res);
+  Student.studentlogin(req, res);
+})
+
+app.post('/recordAttendance', async (req, res) => {
+  console.log(req.body);
+  Student.recordAttendance(req, res);
 })
 
 app.listen(port, () => {

@@ -52,7 +52,7 @@ exports.studentlogin = function (req, res) {
 }
 
 
-app.post('/recordAttendance', async (req, res) => {
+exports.recordAttendance = function (req, res) {
   console.log(req.body);
 
   const { matrix_no, subject, date, time } = req.body;
