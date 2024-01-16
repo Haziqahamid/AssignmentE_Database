@@ -88,14 +88,6 @@ app.get('/attendanceDetails/:matrix_no', async (req, res) => {
 });
 
 
-// Function to view full report of the recorded attendance
-//app.get('/fullAttendanceReport', async (req, res) => {
-  //client.db('Assignment').collection('Attendance').find({}).toArray.then(( result) => {
-   //res.status(200).json(result);
-  //}).catch((err) => {
-    //console.error(err);
-    //res.status(500).send('Error fetching attendance details');
-  //});
 
 // Function to view full report of the recorded attendance
 app.get('/fullAttendanceReport', async (req, res) => {

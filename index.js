@@ -3,6 +3,7 @@ const app = express()
 const port = process.env.PORT || 3000;
 const AcademicAdministrator = require("./AcademicAdministrator.js");
 const Lecturer = require("./Lecturer.js");
+const Student = require("./student.js");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
@@ -385,10 +386,35 @@ app.post('/AddLecturer', verifyToken, async (req, res) => {
   AcademicAdministrator.AddStudent(req, res);
 })
 
-  app.post('/StudentList', async (req, res) => {
-    console.log(req.body);
-    AcademicAdministrator.AddStudent(req, res);
-  })
+app.post('/StudentList', async (req, res) => {
+  console.log(req.body);
+  AcademicAdministrator.StudentList(req, res);
+})
+
+app.post('/StudentList', async (req, res) => {
+  console.log(req.body);
+  Lecturer.StudentList(req, res);
+})
+
+app.post('/AddSubject', async (req, res) => {
+  console.log(req.body);
+  Lecturer.AddSubject(req, res);
+})
+
+app.post('/AttendanceList', async (req, res) => {
+  console.log(req.body);
+  Lecturer.AttendanceList(req, res);
+})
+
+app.post('/Logout', async (req, res) => {
+  console.log("See you next time love.");
+  res.send('See you next time love.');
+})
+
+app.post('/studentlogin', async (req, res) => {
+  console.log(req.body);
+  student.studentlogin(req, res);
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
