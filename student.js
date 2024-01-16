@@ -36,17 +36,17 @@ run().catch(console.dir);
 app.post('/studentregister', async (req, res) => {
 
   client.db("Assignment").collection("Student").find({
-    "matrix_no": {$eq: req.body.matrix_no}
+    "matrix_no": { $eq: req.body.matrix_no }
   }).toArray().then((result) => {
     if (result.length > 0) {
       res.status(400).send('Student already exists')
     } else {
       client.db("Assignment").collection("Student").insertOne(
         {
-            "matrix_no": req.body.username,
-            "password": req.body.password
-        }) 
-        res.send('Register Succesfully')
+          "matrix_no": req.body.username,
+          "password": req.body.password
+        })
+      res.send('Register Succesfully')
     }
   })
 })
@@ -58,14 +58,14 @@ app.post('/studentregister', async (req, res) => {
 });*/
 
 app.post('/studentlogin', async (req, res) => {
-	console.log(req.body);
-  
+  console.log(req.body);
+
   client.db("Assignment").collection("Student").find({
-    "matrix_no": {$eq: req.body.matrix_no}
+    "matrix_no": { $eq: req.body.matrix_no }
   }).toArray().then((result) => {
     if (result.length > 0) {
       res.status(400).send('Login Successful!')
-		}
+    }
     else {
       console.log("Login failed")
       res.status(401).send("Invalid matrix_no or password");
@@ -99,40 +99,38 @@ app.post('/recordAttendance', async (req, res) => {
 
 // Function to view details and timeline of the attendance
 //app.get('/attendanceDetails', async (req, res) => {
-  //const matrix_no = req.params.matrix_no;
+//const matrix_no = req.params.matrix_no;
 
-  //client.db("Assignment").collection('Attendance').find({ matrix_no: matrix_no }).toArray((err, result) => {
-    //if (err) {
-      //console.error(err);
-      //res.status(500).send('Error fetching attendance details');
-    //} else {
-      //res.status(200).json(result);
-   // }
- // });
+//client.db("Assignment").collection('Attendance').find({ matrix_no: matrix_no }).toArray((err, result) => {
+//if (err) {
+//console.error(err);
+//res.status(500).send('Error fetching attendance details');
+//} else {
+//res.status(200).json(result);
+// }
+// });
 //});
 
 // Function to view details and timeline of the attendance
-app.get('/attendanceDetails', async (req, res) => {
-  const matrix_no = req.query.matrix_no;
-
+app.get('/attendanceDetails/:matrix_no', async (req, res) => {
+  const matrix_no = req.params.matrix_no;
+  try {
+    const okay = await client.db("Assignment").collection('Attendance').find({ matrix_no:{$eq :matrix_no }}).toArray();
+    res.status(200).json(okay);
+  }
   //if (!matrix_no) {
-    //return res.status(400).json({ error: 'Matrix number is required in the query parameters.' });
+  //return res.status(400).json({ error: 'Matrix number is required in the query parameters.' });
   //}
-
-  client.db("Assignment").collection('Attendance').find({ matrix_no: matrix_no }).toArray()
-    .then(result => {
-      res.status(200).json(result);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: 'Error fetching attendance details' });
-    });
+  catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching attendance details');
+  }
 });
 
 
 // Function to view full report of the recorded attendance
 app.get('/fullAttendanceReport', async (req, res) => {
-  client.db(dbName).collection('Attendance').find({}).toArray((err, result) => {
+  client.db('Assignment').collection('Attendance').find({}).toArray((err, result) => {
     if (err) {
       console.error(err);
       res.status(500).send('Error fetching full attendance report');
