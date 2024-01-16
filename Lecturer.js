@@ -82,7 +82,7 @@ exports.StudentList = function (req,res) {
   }
 
 
-  exports.StudentList = function (req,res) {
+  exports.AttendanceList = function (req,res) {
     client.db("Assignment").collection("Attendance").find({
     "subject": {$eq: req.body.Subject}
     }).toArray().then((result) => {
