@@ -80,3 +80,17 @@ exports.StudentList = function (req,res) {
     }
   })
   }
+
+
+  exports.StudentList = function (req,res) {
+    client.db("Assignment").collection("Attendance").find({
+    "subject": {$eq: req.body.Subject}
+    }).toArray().then((result) => {
+    if (result.length > 0) {
+      res.status(200).json(result);
+      res.status(400).send('View Successful')
+    } else {
+        res.send('No record')
+    }
+  })
+  }
