@@ -24,76 +24,82 @@ async function run() {
 }
 run().catch(console.dir);
 
-/*exports.AddStudent = function (req,res) {
-  const { MatrixNo } = req.body;
-  client.db("Assignment").collection("Student").find({ "MatrixNo": MatrixNo }).toArray().then((result) => {
-    const user = result[0]
-    if (user) {
-      user.compare(MatrixNo, user.MatrixNo, function(err, result) {
-        if (err) {
-          console.error(err);
-          console.log("Student already exist.");
-          res.status(500).send('Student already exist.');
-          return false;
-        } 
-        else {
-          client.db("Assignment").collection("Student").insertOne();
-          console.log ('Student added');
-          res.status(200).json(result);
-          return result;
-        }
-      });
-    } else{
-      res.send('Forbidden')
-    }
-  })
-}*/
+const bcrypt = require('bcrypt');
 
-exports.AddStudent = function (req,res) {
-  const { MatrixNo } = req.body;
-  client.db("Assignment").collection("Student").find({ "MatrixNo": MatrixNo }).toArray().then((result) => {
-    const user = result[0]
+exports.AddStudent = function (req, res) {
+  const { username } = req.body;
+
+  // Check if the username already exists
+  client.db("Assignment").collection("User").findOne({ "username": username, "role": "Student" }).then((user) => {
     if (user) {
-      console.log("Student already exist.");
-      res.status(500).send('Student already exist.');
-      return false;
-    } 
+      console.log("Student already exists.");
+      res.status(409).send('Student already exists.');
+    }
     else {
-      client.db("Assignment").collection("Student").insertOne();
-      console.log ('Student added');
-      res.status(200).json(result);
-      return result;
+      // If user doesn't exist, insert the new student
+      const {FullName, MatrixNo, Programme} = req.body;
+      client.db("Assignment").collection("User").insertOne({
+        "FullName": FullName,
+        "MatrixNo": MatrixNo,
+        "Programme": Programme,
+        "role": "Student" 
+      }).then((result) => {
+        console.log('Student added');
+        res.status(200).json(result);
+      })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send('Internal Server Error.');
+        });
     }
   })
-}
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Internal Server Error.');
+    });
+};
 
-exports.AddLecturer = function (req,res) {
-  const { LecturerID } = req.body;
-  client.db("Assignment").collection("Lecturer").find({ "LecturerID": LecturerID }).toArray((err, result) => {
-  
-  if (err) {
-    console.error(err);
-    console.log("Lecturer already exist.");
-    res.status(500).send('Lecturer already exist.');
-    return false;
-  } 
-  else {
-    client.db("Assignment").collection("Lecturer").insertOne();
-    console.log ('Lecturer added');
-    res.status(200).json(result);
-    return result;
-  }
+exports.AddLecturer = function (req, res) {
+  const { username } = req.body;
+
+  // Check if the username already exists
+  client.db("Assignment").collection("User").findOne({ "username": username, "role": "Lecturer" }).then((user) => {
+    if (user) {
+      console.log("Lecturer already exists.");
+      res.status(409).send('Lecturer already exists.');
+    }
+    else {
+      // If user doesn't exist, insert the new lecturer
+      const {FullName, LectID} = req.body;
+      client.db("Assignment").collection("User").insertOne({
+        "FullName": FullName,
+        "LectID": LectID,
+        "role": "Lecturer"
+       }).then((result) => {
+        console.log('Lecturer added');
+        res.status(200).json(result);
+      })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send('Internal Server Error.');
+        });
+    }
   })
-}
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Internal Server Error.');
+    });
+};
 
-exports.StudentList = function (req,res) {
-  client.db("Assignment").collection("Student").find({
-  "role": {$eq: req.body.Student}
+exports.StudentList = function (req, res) {
+  client.db("Assignment").collection("User").find({
+    "role": { $eq: req.body.Student }
   }).toArray().then((result) => {
-  if (result.length > 0) {
-    res.status(400).send('View Successful')
-  } else {
+    if (result.length > 0) {
+      res.status(200).json(result);
+      res.status(400).send('View Successful')
+    } else {
       res.send('No record')
-  }
-})
+    }
+  })
 }
