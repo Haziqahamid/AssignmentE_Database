@@ -34,7 +34,7 @@ async function run() {
 run().catch(console.dir);
 
 
-app.post('/studentlogin', async (req, res) => {
+exports.studentlogin = function (req, res) {
   console.log(req.body);
 
   client.db("Assignment").collection("Student").find({
@@ -49,7 +49,7 @@ app.post('/studentlogin', async (req, res) => {
       return
     }
   })
-})
+}
 
 
 app.post('/recordAttendance', async (req, res) => {
