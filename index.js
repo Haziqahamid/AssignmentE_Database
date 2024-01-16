@@ -72,35 +72,6 @@ app.post('/register', (req, res) => {
     res.send("register success");
 })
 
-/*app.post('/register', (req, res) => {
-  const { username, password, role } = req.body;
-  console.log(username, password, role);
-
-  const hash = bcrypt.hashSync(password, 10);
-
-  // Save user data in the "User" collection
-  client.db("Assignment").collection("User").insertOne({
-    "username": username,
-    "password": hash,
-    "role": role
-  });
-
-  // Save user data in a role-specific collection
-  const roleCollectionName = `${role}Collection`; // Assuming role-specific collections are named as "{role}Collection"
-  client.db("Assignment").collection(roleCollectionName).insertOne({
-    "username": username,
-    "password": hash,
-    "role": role
-  });
-
-  console.log(hash);
-  console.log(req.headers.authorization);
-  const token = req.headers.authorization.split('')[1];
-  console.log(token);
-
-  res.send("register success");
-});*/
-
 app.post('/login', async (req, res) => {
   console.log('login', req.body);
   const { username, password, role } = req.body;
