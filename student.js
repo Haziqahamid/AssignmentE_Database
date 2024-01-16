@@ -33,29 +33,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-app.post('/studentregister', async (req, res) => {
-
-  client.db("Assignment").collection("Student").find({
-    "matrix_no": { $eq: req.body.matrix_no }
-  }).toArray().then((result) => {
-    if (result.length > 0) {
-      res.status(400).send('Student already exists')
-    } else {
-      client.db("Assignment").collection("Student").insertOne(
-        {
-          "matrix_no": req.body.username,
-          "password": req.body.password
-        })
-      res.send('Register Succesfully')
-    }
-  })
-})
-
-/*app.post('/studentlogin', async (req, res) => {
-    const { matric_no, password } = req.body;
-    const result = await AttendanceManagementSystem.studentLogin(matric_no, password);
-    res.json(result);
-});*/
 
 app.post('/studentlogin', async (req, res) => {
   console.log(req.body);
