@@ -33,31 +33,8 @@ async function run() {
 }
 run().catch(console.dir);
 
-app.post('/studentregister', async (req, res) => {
 
-  client.db("Assignment").collection("Student").find({
-    "matrix_no": { $eq: req.body.matrix_no }
-  }).toArray().then((result) => {
-    if (result.length > 0) {
-      res.status(400).send('Student already exists')
-    } else {
-      client.db("Assignment").collection("Student").insertOne(
-        {
-          "matrix_no": req.body.username,
-          "password": req.body.password
-        })
-      res.send('Register Succesfully')
-    }
-  })
-})
-
-/*app.post('/studentlogin', async (req, res) => {
-    const { matric_no, password } = req.body;
-    const result = await AttendanceManagementSystem.studentLogin(matric_no, password);
-    res.json(result);
-});*/
-
-app.post('/studentlogin', async (req, res) => {
+exports.studentlogin = function (req, res) {
   console.log(req.body);
 
   client.db("Assignment").collection("Student").find({
@@ -72,7 +49,7 @@ app.post('/studentlogin', async (req, res) => {
       return
     }
   })
-})
+}
 
 
 app.post('/recordAttendance', async (req, res) => {
@@ -111,14 +88,6 @@ app.get('/attendanceDetails/:matrix_no', async (req, res) => {
 });
 
 
-// Function to view full report of the recorded attendance
-//app.get('/fullAttendanceReport', async (req, res) => {
-  //client.db('Assignment').collection('Attendance').find({}).toArray.then(( result) => {
-   //res.status(200).json(result);
-  //}).catch((err) => {
-    //console.error(err);
-    //res.status(500).send('Error fetching attendance details');
-  //});
 
 // Function to view full report of the recorded attendance
 app.get('/fullAttendanceReport', async (req, res) => {
