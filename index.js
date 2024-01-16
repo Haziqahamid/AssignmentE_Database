@@ -3,6 +3,7 @@ const app = express()
 const port = process.env.PORT || 3000;
 const AcademicAdministrator = require("./AcademicAdministrator.js");
 const Lecturer = require("./Lecturer.js");
+const Student = require("./student.js");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
@@ -398,6 +399,11 @@ app.post('/AttendanceList', async (req, res) => {
 app.post('/Logout', async (req, res) => {
   console.log("See you next time love.");
   res.send('See you next time love.');
+})
+
+app.post('/studentlogin', async (req, res) => {
+  console.log(req.body);
+  student.studentlogin(req, res);
 })
 
 app.listen(port, () => {
