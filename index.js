@@ -61,9 +61,32 @@ function verifyToken(req, res, next) {
   })
 }
 
+function VerifyTokens(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header){
+    return res.sendStatus(401).send('Unauthorized');
+  }
+
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err){
+      return res.sendStatus(401).send('Unauthorized');
+    } 
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Lecturer') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  })
+}
+
 app.use(express.json())
 
 app.use(verifyToken)
+app.use(VerifyTokens)
 
 app.post('/register', async (req, res) => {
   const { username, password, role } = req.body;
@@ -396,7 +419,7 @@ app.post('/StudentList', async (req, res) => {
   Lecturer.StudentList(req, res);
 })
 
-app.post('/AddSubject', async (req, res) => {
+app.post('/AddSubject', VerifyTokens, async (req, res) => {
   console.log(req.body);
   Lecturer.AddSubject(req, res);
 })
