@@ -94,3 +94,36 @@ exports.StudentList = function (req,res) {
     }
   })
   }
+
+  exports.AddSubject = function (req,res) {
+    const {Subject} = req.body;
+  
+    // Check if the subject already exists
+    client.db("Assignment").collection("Subject").findOne({ "Subject": Subject}).then((user) => {
+      if (user) {
+        console.log("Subject already exists.");
+        res.status(409).send('Subject already exists.');
+      }
+      else {
+        // If subject doesn't exist, insert the new subject
+        const {Subject, SubjectName, Credit} = req.body;
+        client.db("Assignment").collection("Subject").insertOne({
+          "Subject": Subject,
+          "SubjectName": SubjectName,
+          "Credit": Credit
+        }).then((result) => {
+          console.log('Subject added');
+          res.send('Subject added');
+        })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).send('Internal Server Error.');
+          });
+      }
+    })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Internal Server Error.');
+      });
+  };
+  

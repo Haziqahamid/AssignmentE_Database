@@ -390,6 +390,11 @@ app.post('/StudentList', async (req, res) => {
   Lecturer.StudentList(req, res);
 })
 
+app.post('/AddSubject', async (req, res) => {
+  console.log(req.body);
+  Lecturer.AddSubject(req, res);
+})
+
 app.post('/AttendanceList', async (req, res) => {
   console.log(req.body);
   Lecturer.AttendanceList(req, res);
