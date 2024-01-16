@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 3000;
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 //const port = 4000; // Update the port as needed
@@ -100,7 +100,7 @@ app.get('/fullAttendanceReport', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+/*app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-})
+})*/
 
