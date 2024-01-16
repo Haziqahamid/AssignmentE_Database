@@ -45,7 +45,7 @@ exports.AddStudent = function (req, res) {
         "role": "Student" 
       }).then((result) => {
         console.log('Student added');
-        res.status(200).json(result);
+        res.send('Student added');
       })
         .catch((err) => {
           console.error(err);
@@ -77,7 +77,7 @@ exports.AddLecturer = function (req, res) {
         "role": "Lecturer"
        }).then((result) => {
         console.log('Lecturer added');
-        res.status(200).json(result);
+        res.send('Lecturer added');
       })
         .catch((err) => {
           console.error(err);

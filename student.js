@@ -71,7 +71,7 @@ exports.recordAttendance = function (req, res) {
       res.status(200).send('Attendance recorded successfully');
     }
   });
-});
+}
 
 // Function to view details and timeline of the attendance
 app.get('/attendanceDetails/:matrix_no', async (req, res) => {
