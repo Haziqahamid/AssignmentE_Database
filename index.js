@@ -40,27 +40,55 @@ function generateAccessToken(payload) {
 }
 
 function verifyToken(req, res, next) {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
+  let header = req.headers.authorization;
 
-  if (token == null) return res.sendStatus(401)
+  if (!header){
+    return res.sendStatus(401).send('Unauthorized');
+  }
 
-  jwt.verify(token, "Assignment-GroupE", (err, user) => {
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
     console.log(err)
+    if (err){
+      return res.sendStatus(401).send('Unauthorized');
+    } 
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Admin') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  })
+}
 
-    if (err) return res.sendStatus(403)
+function VerifyTokens(req, res, next) {
+  let header = req.headers.authorization;
 
-    req.user = user
+  if (!header){
+    return res.sendStatus(401).send('Unauthorized');
+  }
 
-    next()
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err){
+      return res.sendStatus(401).send('Unauthorized');
+    } 
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Lecturer') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
   })
 }
 
 app.use(express.json())
 
 app.use(verifyToken)
+app.use(VerifyTokens)
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
   const { username, password, role } = req.body;
   console.log(username, password, role);
 
@@ -97,8 +125,8 @@ app.post('/login', async (req, res) => {
         if (result) {
 
           const token = jwt.sign({
-            user: username,
-            role: role
+            user: user.username,
+            role: user.role
           }, 'Assignment-GroupE', { expiresIn: '20h' });
           console.log('Login Successfully');
 
@@ -371,12 +399,12 @@ app.post('/AddFaculty', async (req, res) => {
   }
 })*/
 
-app.post('/AddStudent', async (req, res) => {
+app.post('/AddStudent', verifyToken, async (req, res) => {
   console.log(req.body);
   AcademicAdministrator.AddStudent(req, res);
 })
 
-app.post('/AddLecturer', async (req, res) => {
+app.post('/AddLecturer', verifyToken, async (req, res) => {
   console.log(req.body);
   AcademicAdministrator.AddStudent(req, res);
 })
@@ -391,7 +419,7 @@ app.post('/StudentList', async (req, res) => {
   Lecturer.StudentList(req, res);
 })
 
-app.post('/AddSubject', async (req, res) => {
+app.post('/AddSubject', VerifyTokens, async (req, res) => {
   console.log(req.body);
   Lecturer.AddSubject(req, res);
 })
