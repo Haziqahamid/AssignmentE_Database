@@ -76,7 +76,7 @@ app.post('/register', (req, res) => {
       const token = req.headers.authorization.split('')[1];
       console.log(token)
 
-      res.send("register success");
+      res.send("Register Success! You go girl!");
     }
   })
 })
@@ -382,7 +382,7 @@ app.post('/AddLecturer', async (req, res) => {
 
 app.post('/StudentList', async (req, res) => {
   console.log(req.body);
-  AcademicAdministrator.AddStudent(req, res);
+  AcademicAdministrator.StudentList(req, res);
 })
 
 app.post('/StudentList', async (req, res) => {
