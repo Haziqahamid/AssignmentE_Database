@@ -182,6 +182,10 @@ app.post('/recordAttendance', async (req, res) => {
   console.log(req.body);
   Student.recordAttendance(req, res);
 })
+app.get('/attendanceDetails/:matrix_no', async (req, res) => {
+  const matrix_no = req.params.matrix_no;
+  Student.attendanceDetails(req, res);
+})
 
 app.post('/StudentList', async (req, res) => {
   console.log(req.body);

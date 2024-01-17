@@ -74,8 +74,11 @@ exports.recordAttendance = function (req, res) {
 }
 
 // Function to view details and timeline of the attendance
-app.get('/attendanceDetails/:matrix_no', async (req, res) => {
-  const matrix_no = req.params.matrix_no;
+//app.get('/attendanceDetails/:matrix_no', async (req, res) => {
+  //const matrix_no = req.params.matrix_no;
+  exports.attendanceDetails = async function (req, res) {
+    console.log(req.body);
+
   try {
     const okay = await client.db("Assignment").collection('Attendance').find({ matrix_no:{$eq :matrix_no }}).toArray();
     res.status(200).json(okay);
@@ -85,7 +88,7 @@ app.get('/attendanceDetails/:matrix_no', async (req, res) => {
     console.error(err);
     res.status(500).send('Error fetching attendance details');
   }
-});
+};
 
 
 
