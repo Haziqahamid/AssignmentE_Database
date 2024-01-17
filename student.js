@@ -93,7 +93,9 @@ exports.recordAttendance = function (req, res) {
 
 
 // Function to view full report of the recorded attendance
-app.get('/fullAttendanceReport', async (req, res) => {
+//app.get('/fullAttendanceReport', async (req, res) => {
+  exports.fullAttendanceReport = async function (req, res) {
+    console.log(req.body);  
   try {
     const result = await client.db('Assignment').collection('Attendance').find({}).toArray();
     res.status(200).json(result);
@@ -101,7 +103,7 @@ app.get('/fullAttendanceReport', async (req, res) => {
     console.error(err);
     res.status(500).send('Error fetching attendance details');
   }
-});
+};
 
 /*app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
