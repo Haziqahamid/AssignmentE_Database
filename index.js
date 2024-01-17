@@ -35,58 +35,7 @@ async function run() {
 }
 run().catch(console.dir)
 
-function generateAccessToken(payload) {
-  return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
-}
-
-function verifyToken(req, res, next) {
-  let header = req.headers.authorization;
-
-  if (!header) {
-    return res.sendStatus(401).send('Unauthorized');
-  }
-  const token = req.headers.authorization.split('')[1];
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    console.log(err)
-    if (err) {
-      return res.sendStatus(401).send('Unauthorized');
-    }
-    else {
-      console.log(decoded);
-      if (decoded.role != 'Admin') {
-        return res.status(401).send('Again Unauthorized');
-      }
-    }
-    next();
-  });
-}
-
-function VerifyTokens(req, res, next) {
-  let header = req.headers.authorization;
-
-  if (!header) {
-    return res.sendStatus(401).send('Unauthorized');
-  }
-  const token = req.headers.authorization.split('')[1];
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    console.log(err)
-    if (err) {
-      return res.sendStatus(401).send('Unauthorized');
-    }
-    else {
-      console.log(decoded);
-      if (decoded.role != 'Lecturer') {
-        return res.status(401).send('Again Unauthorized');
-      }
-    }
-    next();
-  });
-}
-
 app.use(express.json())
-
-app.use(verifyToken);
-app.use(VerifyTokens);
 
 app.post('/register', async (req, res) => {
   const { username, password, role } = req.body;
@@ -161,6 +110,7 @@ app.post('/recordAttendance', async (req, res) => {
   console.log(req.body);
   Student.recordAttendance(req, res);
 })
+
 app.get('/attendanceDetails/:matrix_no', async (req, res) => {
   const matrix_no = req.params.matrix_no;
   Student.attendanceDetails(req, res);
@@ -182,8 +132,8 @@ app.post('/AttendanceList', async (req, res) => {
 })
 
 app.post('/Logout', async (req, res) => {
-  console.log("See you next time love.");
-  res.send('See you next time love.');
+  console.log("See you next time.");
+  res.send('See you next time.');
 })
 
 /*app.post('/studentlogin', async (req, res) => {
@@ -194,3 +144,51 @@ app.post('/Logout', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+function generateAccessToken(payload) {
+  return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
+}
+
+function verifyToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split('')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Admin') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
+
+function VerifyTokens(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split('')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Lecturer') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}

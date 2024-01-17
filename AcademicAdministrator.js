@@ -93,7 +93,7 @@ exports.AddLecturer = function (req, res) {
 
 exports.StudentList = function (req, res) {
   client.db("Assignment").collection("User").find({
-    "role": { $eq: req.body.Student }
+    "role": { $eq: "Student" }
   }).toArray().then((result) => {
     if (result.length > 0) {
       res.status(200).json(result);
