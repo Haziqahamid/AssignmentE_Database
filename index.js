@@ -45,7 +45,7 @@ function verifyToken(req, res, next) {
   if (!header) {
     return res.sendStatus(401).send('Unauthorized');
   }
-
+  const token = req.headers.authorization.split('')[1];
   jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
     console.log(err)
     if (err) {
@@ -67,7 +67,7 @@ function VerifyTokens(req, res, next) {
   if (!header) {
     return res.sendStatus(401).send('Unauthorized');
   }
-
+  const token = req.headers.authorization.split('')[1];
   jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
     console.log(err)
     if (err) {
@@ -85,8 +85,8 @@ function VerifyTokens(req, res, next) {
 
 app.use(express.json())
 
-app.use(verifyToken)
-app.use(VerifyTokens)
+app.use(verifyToken);
+app.use(VerifyTokens);
 
 app.post('/register', async (req, res) => {
   const { username, password, role } = req.body;
@@ -105,7 +105,7 @@ app.post('/register', async (req, res) => {
       const token = req.headers.authorization.split('')[1];
       console.log(token)
 
-      res.send("Register Success! You go girl!");
+      res.send("Register Success!");
     }
   })
 })
@@ -138,27 +138,6 @@ app.post('/login', async (req, res) => {
       })
     } else {
       res.send('user not found')
-    }
-  })
-})
-
-app.post('/recordAttendance', async (req, res) => {
-  console.log(req.body);
-
-  const { matrix_no, subject, date, time } = req.body;
-
-  client.db("Assignment").collection('Attendance').insertOne({
-    matrix_no: matrix_no,
-    subject: subject,
-    date: date,
-    time: time,
-    status: 'Present'
-  }, (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error recording attendance');
-    } else {
-      res.status(200).send('Attendance recorded successfully');
     }
   })
 })
