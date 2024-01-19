@@ -106,12 +106,12 @@ app.post('/StudentList', async (req, res) => {
   AcademicAdministrator.StudentList(req, res);
 })
 
-app.post('/recordAttendance', VerifyTokens,async (req, res) => {
+app.post('/recordAttendance', VerifyTokensss, async (req, res) => {
   console.log(req.body);
   Student.recordAttendance(req, res);
 })
 
-app.get('/attendanceDetails/:matrix_no', VerifyTokens, async (req, res) => {
+app.get('/attendanceDetails/:matrix_no', VerifyTokensss, async (req, res) => {
   const matrix_no = req.params.matrix_no;
   Student.attendanceDetails(req, res);
 })
@@ -159,7 +159,7 @@ function verifyToken(req, res, next) {
   if (!header) {
     return res.sendStatus(401).send('Unauthorized');
   }
-  const token = req.headers.authorization.split('')[1];
+  const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
     console.log(err)
     if (err) {
@@ -181,7 +181,7 @@ function VerifyTokens(req, res, next) {
   if (!header) {
     return res.sendStatus(401).send('Unauthorized');
   }
-  const token = req.headers.authorization.split('')[1];
+  const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
     console.log(err)
     if (err) {
@@ -196,13 +196,14 @@ function VerifyTokens(req, res, next) {
     next();
   });
 }
-function VerifyTokens(req, res, next) {
+
+function VerifyTokensss(req, res, next) {
   let header = req.headers.authorization;
 
   if (!header) {
     return res.sendStatus(401).send('Unauthorized');
   }
-  const token = req.headers.authorization.split('')[1];
+  const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
     console.log(err)
     if (err) {
