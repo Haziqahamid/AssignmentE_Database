@@ -35,6 +35,76 @@ async function run() {
 }
 run().catch(console.dir)
 
+function generateAccessToken(payload) {
+  return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
+}
+
+function verifyToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Admin') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
+
+function VerifyTokens(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Lecturer') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
+
+function VerifyTokensss(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Student') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
+
 app.use(express.json())
 
 app.post('/register', async (req, res) => {
@@ -106,7 +176,7 @@ app.post('/StudentList', async (req, res) => {
   AcademicAdministrator.StudentList(req, res);
 })
 
-app.post('/recordAttendance', VerifyToken,async (req, res) => {
+app.post('/recordAttendance', VerifyTokensss, async (req, res) => {
   console.log(req.body);
   Student.recordAttendance(req, res);
 })
@@ -147,73 +217,4 @@ app.post('/Logout', async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-});
-
-function generateAccessToken(payload) {
-  return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
-}
-
-function verifyToken(req, res, next) {
-  let header = req.headers.authorization;
-
-  if (!header) {
-    return res.sendStatus(401).send('Unauthorized');
-  }
-  const token = req.headers.authorization.split('')[1];
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    console.log(err)
-    if (err) {
-      return res.sendStatus(401).send('Unauthorized');
-    }
-    else {
-      console.log(decoded);
-      if (decoded.role != 'Admin') {
-        return res.status(401).send('Again Unauthorized');
-      }
-    }
-    next();
-  });
-}
-
-function VerifyTokens(req, res, next) {
-  let header = req.headers.authorization;
-
-  if (!header) {
-    return res.sendStatus(401).send('Unauthorized');
-  }
-  const token = req.headers.authorization.split('')[1];
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    console.log(err)
-    if (err) {
-      return res.sendStatus(401).send('Unauthorized');
-    }
-    else {
-      console.log(decoded);
-      if (decoded.role != 'Lecturer') {
-        return res.status(401).send('Again Unauthorized');
-      }
-    }
-    next();
-  });
-}
-function VerifyToken(req, res, next) {
-  let header = req.headers.authorization;
-
-  if (!header) {
-    return res.sendStatus(401).send('Unauthorized');
-  }
-  const token = req.headers.authorization.split('')[1];
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    console.log(err)
-    if (err) {
-      return res.sendStatus(401).send('Unauthorized');
-    }
-    else {
-      console.log(decoded);
-      if (decoded.role != 'student') {
-        return res.status(401).send('Again Unauthorized');
-      }
-    }
-    next();
-  });
-}
+})
