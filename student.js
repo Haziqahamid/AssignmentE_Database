@@ -1,12 +1,3 @@
-const express = require('express')
-const app = express()
-//const port = process.env.PORT || 3000;
-const bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
-//const port = 4000; // Update the port as needed
-
-app.use(express.json())
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://Assignment:lJfAGDdoR6APLWSC@cluster0.ruowk6x.mongodb.net/?retryWrites=true&w=majority";
 
@@ -73,14 +64,11 @@ exports.recordAttendance = function (req, res) {
   });
 }
 
-// Function to view details and timeline of the attendance
-//app.get('/attendanceDetails/:matrix_no', async (req, res) => {
-  //const matrix_no = req.params.matrix_no;
-  exports.attendanceDetails = async function (req, res) {
-    console.log(req.body);
+exports.attendanceDetails = async function (req, res) {
+  console.log(req.body);
 
   try {
-    const okay = await client.db("Assignment").collection('Attendance').find({ matrix_no:{$eq :matrix_no }}).toArray();
+    const okay = await client.db("Assignment").collection('Attendance').find({ matrix_no: { $eq: matrix_no } }).toArray();
     res.status(200).json(okay);
   }
 
@@ -91,11 +79,8 @@ exports.recordAttendance = function (req, res) {
 };
 
 
-
-// Function to view full report of the recorded attendance
-//app.get('/fullAttendanceReport', async (req, res) => {
-  exports.fullAttendanceReport = async function (req, res) {
-    console.log(req.body);  
+exports.fullAttendanceReport = async function (req, res) {
+  console.log(req.body);
   try {
     const result = await client.db('Assignment').collection('Attendance').find({}).toArray();
     res.status(200).json(result);
@@ -105,7 +90,4 @@ exports.recordAttendance = function (req, res) {
   }
 };
 
-/*app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-})*/
 
