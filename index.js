@@ -106,12 +106,12 @@ app.post('/StudentList', async (req, res) => {
   AcademicAdministrator.StudentList(req, res);
 })
 
-app.post('/recordAttendance', VerifyTokens,async (req, res) => {
+app.post('/recordAttendance', VerifyToken,async (req, res) => {
   console.log(req.body);
   Student.recordAttendance(req, res);
 })
 
-app.get('/attendanceDetails/:matrix_no', VerifyTokens, async (req, res) => {
+app.get('/attendanceDetails/:matrix_no', VerifyToken, async (req, res) => {
   const matrix_no = req.params.matrix_no;
   Student.attendanceDetails(req, res);
 })
@@ -196,7 +196,7 @@ function VerifyTokens(req, res, next) {
     next();
   });
 }
-function VerifyTokens(req, res, next) {
+function VerifyToken(req, res, next) {
   let header = req.headers.authorization;
 
   if (!header) {
@@ -210,7 +210,7 @@ function VerifyTokens(req, res, next) {
     }
     else {
       console.log(decoded);
-      if (decoded.role != 'Student') {
+      if (decoded.role != 'student') {
         return res.status(401).send('Again Unauthorized');
       }
     }
