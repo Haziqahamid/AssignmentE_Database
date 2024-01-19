@@ -24,26 +24,7 @@ async function run() {
 }
 run().catch(console.dir);
 
-
-exports.studentlogin = function (req, res) {
-  console.log(req.body);
-
-  client.db("Assignment").collection("Student").find({
-    "matrix_no": { $eq: req.body.matrix_no }
-  }).toArray().then((result) => {
-    if (result.length > 0) {
-      res.status(400).send('Login Successful!')
-    }
-    else {
-      console.log("Login failed")
-      res.status(401).send("Invalid matrix_no or password");
-      return
-    }
-  })
-}
-
-
-exports.recordAttendance = function (req, res) {
+function recordAttendance (req, res) {
   console.log(req.body);
 
   const { matrix_no, subject, date, time } = req.body;
@@ -64,7 +45,7 @@ exports.recordAttendance = function (req, res) {
   });
 }
 
-exports.attendanceDetails = async function (req, res) {
+async function attendanceDetails (req, res) {
   console.log(req.body);
 
   try {
@@ -79,7 +60,7 @@ exports.attendanceDetails = async function (req, res) {
 };
 
 
-exports.fullAttendanceReport = async function (req, res) {
+async function fullAttendanceReport (req, res) {
   console.log(req.body);
   try {
     const result = await client.db('Assignment').collection('Attendance').find({}).toArray();
@@ -90,4 +71,8 @@ exports.fullAttendanceReport = async function (req, res) {
   }
 };
 
-
+module.exports = {
+  recordAttendance,
+  attendanceDetails,
+  fullAttendanceReport,
+};
