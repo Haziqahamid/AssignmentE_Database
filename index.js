@@ -61,7 +61,7 @@ function verifyToken(req, res, next) {
   });
 }
 
-function VerifyTokens(req, res, next) {
+function LecturerToken(req, res, next) {
   let header = req.headers.authorization;
 
   if (!header) {
@@ -83,7 +83,7 @@ function VerifyTokens(req, res, next) {
   });
 }
 
-function VerifyTokensss(req, res, next) {
+function StudentToken(req, res, next) {
   let header = req.headers.authorization;
 
   if (!header) {
@@ -168,7 +168,7 @@ app.post('/AddStudent', verifyToken, async (req, res) => {
 
 app.post('/AddLecturer', verifyToken, async (req, res) => {
   console.log(req.body);
-  AcademicAdministrator.AddStudent(req, res);
+  AcademicAdministrator.AddLecturer(req, res);
 })
 
 app.post('/StudentList', async (req, res) => {
@@ -176,7 +176,7 @@ app.post('/StudentList', async (req, res) => {
   AcademicAdministrator.StudentList(req, res);
 })
 
-app.post('/recordAttendance', VerifyTokensss, async (req, res) => {
+app.post('/recordAttendance', StudentToken, async (req, res) => {
   console.log(req.body);
   Student.recordAttendance(req, res);
 })
@@ -195,7 +195,7 @@ app.post('/StudentList', async (req, res) => {
   Lecturer.StudentList(req, res);
 })
 
-app.post('/AddSubject', VerifyTokens, async (req, res) => {
+app.post('/AddSubject', LecturerToken, async (req, res) => {
   console.log(req.body);
   Lecturer.AddSubject(req, res);
 })
