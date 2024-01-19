@@ -111,7 +111,7 @@ app.post('/recordAttendance', VerifyTokensss, async (req, res) => {
   Student.recordAttendance(req, res);
 })
 
-app.get('/attendanceDetails/:matrix_no', VerifyTokensss, async (req, res) => {
+app.get('/attendanceDetails/:matrix_no', async (req, res) => {
   const matrix_no = req.params.matrix_no;
   Student.attendanceDetails(req, res);
 })
