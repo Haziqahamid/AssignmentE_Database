@@ -24,28 +24,26 @@ async function run() {
 }
 run().catch(console.dir);
 
-function recordAttendance (req, res) {
-  console.log(req.body);
+exports.recordAttendance = function (req, res) {
 
   const { matrix_no, subject, date, time } = req.body;
-
   client.db("Assignment").collection('Attendance').insertOne({
     matrix_no: matrix_no,
     subject: subject,
     date: date,
     time: time,
     status: 'Present'
-  }, (err, result) => {
-    if (err) {
+  }).then((result) => {
+    console.log(req.body);
+    res.send('Attendance recorded successfully');
+  })
+    .catch((err) => {
       console.error(err);
       res.status(500).send('Error recording attendance');
-    } else {
-      res.status(200).send('Attendance recorded successfully');
-    }
-  });
+    });
 }
 
-async function attendanceDetails (req, res) {
+exports.attendanceDetails = async function (req, res) {
   console.log(req.body);
 
   try {
@@ -60,7 +58,7 @@ async function attendanceDetails (req, res) {
 };
 
 
-async function fullAttendanceReport (req, res) {
+exports.fullAttendanceReport = async function (req, res) {
   console.log(req.body);
   try {
     const result = await client.db('Assignment').collection('Attendance').find({}).toArray();
@@ -69,10 +67,4 @@ async function fullAttendanceReport (req, res) {
     console.error(err);
     res.status(500).send('Error fetching attendance details');
   }
-};
-
-module.exports = {
-  recordAttendance,
-  attendanceDetails,
-  fullAttendanceReport,
 };
