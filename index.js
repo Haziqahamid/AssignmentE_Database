@@ -211,7 +211,7 @@ function VerifyTokensss(req, res, next) {
     }
     else {
       console.log(decoded);
-      if (decoded.role != 'Student') {
+      if (decoded.role != 'student') {
         return res.status(401).send('Again Unauthorized');
       }
     }
