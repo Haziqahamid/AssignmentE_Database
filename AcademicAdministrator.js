@@ -27,21 +27,23 @@ run().catch(console.dir);
 const bcrypt = require('bcrypt');
 
 exports.AddStudent = function (req, res) {
-  const { username } = req.body;
+  const { StudentID } = req.body;
 
-  // Check if the username already exists
-  client.db("Assignment").collection("User").findOne({ "username": username, "role": "Student" }).then((user) => {
+  // Check if the student already exists
+  client.db("Assignment").collection("User").findOne({ "StudentID": StudentID, "role": "Student" }).then((user) => {
     if (user) {
       console.log("Student already exists.");
       res.status(409).send('Student already exists.');
     }
     else {
-      // If user doesn't exist, insert the new student
-      const {FullName, MatrixNo, Programme} = req.body;
+      // If student doesn't exist, insert the new student
+      const {Username, Password, StudentID, Email, PhoneNo} = req.body;
       client.db("Assignment").collection("User").insertOne({
-        "FullName": FullName,
-        "MatrixNo": MatrixNo,
-        "Programme": Programme,
+        "Username": Username,
+        "Password": Password,
+        "StudentID": StudentID,
+        "Email": Email,
+        "PhoneNo": PhoneNo,
         "role": "Student" 
       }).then((result) => {
         console.log('Student added');
