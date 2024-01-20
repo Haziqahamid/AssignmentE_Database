@@ -109,7 +109,7 @@ exports.StudentList = function (req, res) {
   })
 };
 
-exports.Programs = function (req, res) {
+exports.AddPrograms = function (req, res) {
   const { Code } = req.body;
 
   // Check if the programs already exists
