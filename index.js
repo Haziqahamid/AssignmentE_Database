@@ -152,7 +152,7 @@ app.post('/StudentList', AdminAndLecturerToken, async (req, res) => {
   Lecturer.StudentList(req, res);
 })
 
-app.post('/AddSubject', LecturerToken, async (req, res) => {
+app.post('/AddSubject', AdminAndLecturerToken, async (req, res) => {
   console.log(req.body);
   Lecturer.AddSubject(req, res);
 })
