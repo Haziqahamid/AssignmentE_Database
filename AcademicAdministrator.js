@@ -62,20 +62,23 @@ exports.AddStudent = function (req, res) {
 };
 
 exports.AddLecturer = function (req, res) {
-  const { username } = req.body;
+  const { LectID } = req.body;
 
-  // Check if the username already exists
-  client.db("Assignment").collection("User").findOne({ "username": username, "role": "Lecturer" }).then((user) => {
+  // Check if the lecturer already exists
+  client.db("Assignment").collection("User").findOne({ "LectID": LectID, "role": "Lecturer" }).then((user) => {
     if (user) {
       console.log("Lecturer already exists.");
       res.status(409).send('Lecturer already exists.');
     }
     else {
-      // If user doesn't exist, insert the new lecturer
-      const {FullName, LectID} = req.body;
+      // If lecturer doesn't exist, insert the new lecturer
+      const {Username, Password, LectID, Email, PhoneNo} = req.body;
       client.db("Assignment").collection("User").insertOne({
-        "FullName": FullName,
+        "Username": Username,
+        "Password": Password,
         "LectID": LectID,
+        "Email": Email,
+        "PhoneNo": PhoneNo,
         "role": "Lecturer"
        }).then((result) => {
         console.log('Lecturer added');
