@@ -38,7 +38,7 @@ run().catch(console.dir)
 app.use(express.json())
 
 app.post('/register', async (req, res) => {
-  const { username, password, StudentID, LectID, Email, PhoneNo, role } = req.body;
+  const { username, password, role } = req.body;
   console.log(username, password, role);
 
   client.db("Assignment").collection("User").findOne({ "username": username }).then((user) => {
@@ -46,23 +46,38 @@ app.post('/register', async (req, res) => {
       console.log("Username already exists.");
       res.status(409).send('Username already exists.');
     }
-    else {
-      const hash = bcrypt.hashSync(password, 10);
-      client.db("Assignment").collection("User").insertOne({ 
-        "username": username, 
-        "password": hash, 
-        "StudentID": StudentID,
-        "LectID": LectID,
-        "Email": Email,
-        "PhoneNo": PhoneNo,
-        "role": role });
+    const { Email, PhoneNo } = req.body;
+    const hash = bcrypt.hashSync(password, 10);
+    let userObject = {
+      "username": username,
+      "password": hash,
+      "Email": Email,
+      "PhoneNo": PhoneNo,
+      "role": role
+    };
+
+    if (role === 'Student') {
+      const { StudentID } = req.body;
+      userObject.StudentID = StudentID
+    }
+
+    if (role === 'Lecturer') {
+      const { LectID } = req.body;
+      userObject.LectID = LectID
+    }
+
+    client.db("Assignment").collection("User").insertOne(userObject).then(() => {
       console.log(hash)
       console.log(req.headers.authorization)
       const token = req.headers.authorization.split('')[1];
       console.log(token)
-
       res.send("Register Success!");
-    }
+    })
+
+    .catch(error => {
+      console.error("Internal Server Error", error);
+      res.status(500).send("Internal Server Error");
+    });
   })
 })
 
@@ -118,8 +133,8 @@ app.post('/recordAttendance', StudentToken, async (req, res) => {
   Student.recordAttendance(req, res);
 })
 
-app.get('/attendanceDetails/:matrix_no', async (req, res) => {
-  const matrix_no = req.params.matrix_no;
+app.get('/attendanceDetails/:StudentID', async (req, res) => {
+  const StudentID = req.params;
   Student.attendanceDetails(req, res);
 })
 

@@ -26,15 +26,15 @@ run().catch(console.dir);
 
 exports.recordAttendance = function (req, res) {
 
-  const { username,studentId, subject,program, date, time } = req.body;
+  const { Username, StudentID, Subject, Program, Date, Time } = req.body;
   client.db("Assignment").collection('Attendance').insertOne({
-    username: username,
-    studentId: studentId,
-    subject: subject,
-    program: program,
-    date: date,
-    time: time,
-    status: 'Present'
+    "Username": Username,
+    "StudentID": StudentID,
+    "Subject": Subject,
+    "Program": Program,
+    "Date": Date,
+    "Time": Time,
+    "Status": 'Present'
   }).then((result) => {
     console.log(req.body);
     res.send('Attendance recorded successfully');
@@ -47,10 +47,11 @@ exports.recordAttendance = function (req, res) {
 
 exports.attendanceDetails = async function (req, res) {
   console.log(req.body);
+  const { StudentID } = req.params;
 
   try {
-    const okay = await client.db("Assignment").collection('Attendance').find({ matrix_no: { $eq: matrix_no } }).toArray();
-    res.status(200).json(okay);
+    const okay = await client.db("Assignment").collection('Attendance').find({ "StudentID": { $eq: StudentID } }).toArray();
+    res.status(200).send(okay);
   }
 
   catch (err) {
