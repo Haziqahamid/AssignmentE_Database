@@ -147,7 +147,7 @@ app.get('/fullAttendanceReport', async (req, res) => {
   Student.fullAttendanceReport(req, res);
 })
 
-app.post('/StudentList', async (req, res) => {
+app.post('/StudentList', AdminAndLecturerToken, async (req, res) => {
   console.log(req.body);
   Lecturer.StudentList(req, res);
 })
@@ -212,6 +212,28 @@ function LecturerToken(req, res, next) {
     else {
       console.log(decoded);
       if (decoded.role != 'Lecturer') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
+
+function AdminAndLecturerToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Lecturer' && decoded.role != 'Admin') {
         return res.status(401).send('Again Unauthorized');
       }
     }
