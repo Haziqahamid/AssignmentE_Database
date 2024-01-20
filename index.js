@@ -39,7 +39,7 @@ function generateAccessToken(payload) {
   return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
 }
 
-function verifyToken(req, res, next) {
+function AdminToken(req, res, next) {
   let header = req.headers.authorization;
 
   if (!header) {
@@ -108,7 +108,7 @@ function StudentToken(req, res, next) {
 app.use(express.json())
 
 app.post('/register', async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password, StudentID, LectID, Email, PhoneNo, role } = req.body;
   console.log(username, password, role);
 
   client.db("Assignment").collection("User").findOne({ "username": username }).then((user) => {
@@ -118,7 +118,14 @@ app.post('/register', async (req, res) => {
     }
     else {
       const hash = bcrypt.hashSync(password, 10);
-      client.db("Assignment").collection("User").insertOne({ "username": username, "password": hash, "role": role });
+      client.db("Assignment").collection("User").insertOne({ 
+        "username": username, 
+        "password": hash, 
+        "StudentID": StudentID,
+        "LectID": LectID,
+        "Email": Email,
+        "PhoneNo": PhoneNo,
+        "role": role });
       console.log(hash)
       console.log(req.headers.authorization)
       const token = req.headers.authorization.split('')[1];
@@ -161,19 +168,19 @@ app.post('/login', async (req, res) => {
   })
 })
 
-app.post('/AddStudent', verifyToken, async (req, res) => {
+app.post('/AddStudent', AdminToken, async (req, res) => {
   console.log(req.body);
   AcademicAdministrator.AddStudent(req, res);
 })
 
-app.post('/AddLecturer', verifyToken, async (req, res) => {
+app.post('/AddLecturer', AdminToken, async (req, res) => {
   console.log(req.body);
   AcademicAdministrator.AddLecturer(req, res);
 })
 
-app.post('/StudentList', async (req, res) => {
+app.post('/AddPrograms', AdminToken, async (req, res) => {
   console.log(req.body);
-  AcademicAdministrator.StudentList(req, res);
+  AcademicAdministrator.AddPrograms(req, res);
 })
 
 app.post('/recordAttendance', StudentToken, async (req, res) => {
