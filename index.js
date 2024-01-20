@@ -128,6 +128,11 @@ app.post('/AddPrograms', AdminToken, async (req, res) => {
   AcademicAdministrator.AddPrograms(req, res);
 })
 
+app.patch('/UpdatePassword', async (req, res) => {
+  console.log(req.body);
+  AcademicAdministrator.UpdatePassword(req, res);
+})
+
 app.post('/recordAttendance', StudentToken, async (req, res) => {
   console.log(req.body);
   Student.recordAttendance(req, res);

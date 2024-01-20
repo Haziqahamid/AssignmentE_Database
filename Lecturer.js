@@ -25,11 +25,11 @@ async function run() {
 run().catch(console.dir);
 
 exports.StudentList = function (req,res) {
-    client.db("Assignment").collection("Student").find({
+    client.db("Assignment").collection("User").find({
     "role": {$eq: "Student"}
     }).toArray().then((result) => {
     if (result.length > 0) {
-      res.status(400).send('View Successful')
+      res.status(200).json(result);
     } else {
         res.send('No record')
     }
@@ -39,7 +39,7 @@ exports.StudentList = function (req,res) {
 
   exports.AttendanceList = function (req,res) {
     client.db("Assignment").collection("Attendance").find({
-    "subject": {$eq: req.body.Subject}
+    "Subject": {$eq: req.body.Subject}
     }).toArray().then((result) => {
     if (result.length > 0) {
       res.status(200).json(result);

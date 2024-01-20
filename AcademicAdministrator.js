@@ -37,14 +37,14 @@ exports.AddStudent = function (req, res) {
     }
     else {
       // If student doesn't exist, insert the new student
-      const {Username, Password, StudentID, Email, PhoneNo} = req.body;
+      const { Username, Password, StudentID, Email, PhoneNo } = req.body;
       client.db("Assignment").collection("User").insertOne({
         "Username": Username,
         "Password": Password,
         "StudentID": StudentID,
         "Email": Email,
         "PhoneNo": PhoneNo,
-        "role": "Student" 
+        "role": "Student"
       }).then((result) => {
         console.log('Student added');
         res.send('Student added');
@@ -72,7 +72,7 @@ exports.AddLecturer = function (req, res) {
     }
     else {
       // If lecturer doesn't exist, insert the new lecturer
-      const {Username, Password, LectID, Email, PhoneNo} = req.body;
+      const { Username, Password, LectID, Email, PhoneNo } = req.body;
       client.db("Assignment").collection("User").insertOne({
         "Username": Username,
         "Password": Password,
@@ -80,7 +80,7 @@ exports.AddLecturer = function (req, res) {
         "Email": Email,
         "PhoneNo": PhoneNo,
         "role": "Lecturer"
-       }).then((result) => {
+      }).then((result) => {
         console.log('Lecturer added');
         res.send('Lecturer added');
       })
@@ -96,18 +96,44 @@ exports.AddLecturer = function (req, res) {
     });
 };
 
-exports.StudentList = function (req, res) {
-  client.db("Assignment").collection("User").find({
-    "role": { $eq: "Student" }
-  }).toArray().then((result) => {
-    if (result.length > 0) {
-      res.status(200).json(result);
-      res.status(400).send('View Successful')
-    } else {
-      res.send('No record')
-    }
-  })
+exports.UpdatePassword = function (req, res) {
+  const { Username, Password } = req.body;
+
+  // Check if the Username exists
+  client.db("Assignment").collection("User").findOne({ "Username": Username })
+    .then((user) => {
+      if (user) {
+        // Hash the new password
+        bcrypt.hash(Password, 10, (hashError, hashPassword) => {
+          if (hashError) {
+            console.error(hashError);
+            return res.status(500).send('Error hashing password.');
+          }
+
+          // Update the password for the found user
+          client.db("Assignment").collection("User").updateOne(
+            { "Username": Username }, // Filter criteria
+            { $set: { "Password": hashPassword } } // Update operation with hashed password
+          ).then((result) => {
+            console.log('Password Updated');
+            res.send('Password Updated');
+          }).catch((updateError) => {
+            console.error(updateError);
+            res.status(500).send('Failed to update password.');
+          });
+        });
+      } else {
+        // Username doesn't exist
+        console.log("Wrong Username");
+        res.status(409).send('Wrong Username');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Internal Server Error.');
+    });
 };
+
 
 exports.AddPrograms = function (req, res) {
   const { Code } = req.body;
@@ -120,11 +146,11 @@ exports.AddPrograms = function (req, res) {
     }
     else {
       // If program doesn't exist, insert the new program
-      const {Code, Name} = req.body;
-      client.db("Assignment").collection("User").insertOne({
+      const { Code, Name } = req.body;
+      client.db("Assignment").collection("Programs").insertOne({
         "Code": Code,
         "Name": Name
-       }).then((result) => {
+      }).then((result) => {
         console.log('Program added');
         res.send('Program added');
       })
