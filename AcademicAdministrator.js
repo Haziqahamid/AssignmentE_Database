@@ -102,4 +102,35 @@ exports.StudentList = function (req, res) {
       res.send('No record')
     }
   })
-}
+};
+
+exports.Programs = function (req, res) {
+  const { Code } = req.body;
+
+  // Check if the programs already exists
+  client.db("Assignment").collection("Programs").findOne({ "Code": Code }).then((user) => {
+    if (user) {
+      console.log("Programs already exists.");
+      res.status(409).send('Programs already exists.');
+    }
+    else {
+      // If program doesn't exist, insert the new program
+      const {Code, Name} = req.body;
+      client.db("Assignment").collection("User").insertOne({
+        "Code": Code,
+        "Name": Name
+       }).then((result) => {
+        console.log('Program added');
+        res.send('Program added');
+      })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send('Internal Server Error.');
+        });
+    }
+  })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Internal Server Error.');
+    });
+};
