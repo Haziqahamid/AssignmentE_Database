@@ -26,10 +26,12 @@ run().catch(console.dir);
 
 exports.recordAttendance = function (req, res) {
 
-  const { matrix_no, subject, date, time } = req.body;
+  const { username,studentId, subject,program, date, time } = req.body;
   client.db("Assignment").collection('Attendance').insertOne({
-    matrix_no: matrix_no,
+    username: username,
+    studentId: studentId,
     subject: subject,
+    program: program,
     date: date,
     time: time,
     status: 'Present'
