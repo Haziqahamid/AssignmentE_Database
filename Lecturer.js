@@ -51,20 +51,20 @@ exports.StudentList = function (req,res) {
   }
 
   exports.AddSubject = function (req,res) {
-    const {Subject} = req.body;
+    const {Code} = req.body;
   
     // Check if the subject already exists
-    client.db("Assignment").collection("Subject").findOne({ "Subject": Subject}).then((user) => {
+    client.db("Assignment").collection("Subject").findOne({ "Code": Code}).then((user) => {
       if (user) {
         console.log("Subject already exists.");
         res.status(409).send('Subject already exists.');
       }
       else {
         // If subject doesn't exist, insert the new subject
-        const {Subject, SubjectName, Credit} = req.body;
+        const {Code, Name, Credit} = req.body;
         client.db("Assignment").collection("Subject").insertOne({
-          "Subject": Subject,
-          "SubjectName": SubjectName,
+          "Code": Code,
+          "Name": Name,
           "Credit": Credit
         }).then((result) => {
           console.log('Subject added');
