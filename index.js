@@ -35,76 +35,6 @@ async function run() {
 }
 run().catch(console.dir)
 
-function generateAccessToken(payload) {
-  return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
-}
-
-function AdminToken(req, res, next) {
-  let header = req.headers.authorization;
-
-  if (!header) {
-    return res.sendStatus(401).send('Unauthorized');
-  }
-  const token = req.headers.authorization.split(' ')[1];
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    console.log(err)
-    if (err) {
-      return res.sendStatus(401).send('Unauthorized');
-    }
-    else {
-      console.log(decoded);
-      if (decoded.role != 'Admin') {
-        return res.status(401).send('Again Unauthorized');
-      }
-    }
-    next();
-  });
-}
-
-function LecturerToken(req, res, next) {
-  let header = req.headers.authorization;
-
-  if (!header) {
-    return res.sendStatus(401).send('Unauthorized');
-  }
-  const token = req.headers.authorization.split(' ')[1];
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    console.log(err)
-    if (err) {
-      return res.sendStatus(401).send('Unauthorized');
-    }
-    else {
-      console.log(decoded);
-      if (decoded.role != 'Lecturer') {
-        return res.status(401).send('Again Unauthorized');
-      }
-    }
-    next();
-  });
-}
-
-function StudentToken(req, res, next) {
-  let header = req.headers.authorization;
-
-  if (!header) {
-    return res.sendStatus(401).send('Unauthorized');
-  }
-  const token = req.headers.authorization.split(' ')[1];
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    console.log(err)
-    if (err) {
-      return res.sendStatus(401).send('Unauthorized');
-    }
-    else {
-      console.log(decoded);
-      if (decoded.role != 'Student') {
-        return res.status(401).send('Again Unauthorized');
-      }
-    }
-    next();
-  });
-}
-
 app.use(express.json())
 
 app.post('/register', async (req, res) => {
@@ -217,11 +147,76 @@ app.post('/Logout', async (req, res) => {
   res.send('See you next time.');
 })
 
-/*app.post('/studentlogin', async (req, res) => {
-  console.log(req.body);
-  Student.studentlogin(req, res);
-})*/
-
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 })
+
+function generateAccessToken(payload) {
+  return jwt.sign(payload, "Assignment-GroupE", { expiresIn: '1h' });
+}
+
+function AdminToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Admin') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
+
+function LecturerToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Lecturer') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
+
+function StudentToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Student') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
