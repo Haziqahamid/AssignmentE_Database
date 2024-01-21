@@ -27,7 +27,7 @@ run().catch(console.dir);
 const bcrypt = require('bcrypt');
 
 exports.AddStudent = function (req, res) {
-  const { StudentID } = req.body;
+  const { username, password, StudentID, Email, PhoneNo } = req.body;
 
   // Check if the student already exists
   client.db("Assignment").collection("User").findOne({ "StudentID": StudentID, "role": "Student" }).then((user) => {
@@ -38,7 +38,6 @@ exports.AddStudent = function (req, res) {
     else {
       // If student doesn't exist, insert the new student
       const hash = bcrypt.hashSync(password, 10);
-      const { username, StudentID, Email, PhoneNo } = req.body;
       client.db("Assignment").collection("User").insertOne({
         "username": username,
         "password": hash,
@@ -63,7 +62,7 @@ exports.AddStudent = function (req, res) {
 };
 
 exports.AddLecturer = function (req, res) {
-  const { LectID } = req.body;
+  const { username, password, LectID, Email, PhoneNo } = req.body;
 
   // Check if the lecturer already exists
   client.db("Assignment").collection("User").findOne({ "LectID": LectID, "role": "Lecturer" }).then((user) => {
@@ -74,7 +73,6 @@ exports.AddLecturer = function (req, res) {
     else {
       // If lecturer doesn't exist, insert the new lecturer
       const hash = bcrypt.hashSync(password, 10);
-      const { username, LectID, Email, PhoneNo } = req.body;
       client.db("Assignment").collection("User").insertOne({
         "username": username,
         "password": hash,
