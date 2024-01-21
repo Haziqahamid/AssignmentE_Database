@@ -28,12 +28,12 @@ exports.StudentList = function (req, res) {
   console.log(req.body);
   const result = client.db("Assignment").collection("User").find(
     { "role": { $eq: "Student" } }).toArray();
-  if (result.length > 0) {
-    res.status(200).json(result);
-  }
-  else {
-    res.send('No record')
-  }
+      if (result.length > 0) {
+        res.status(200).json(result);
+      }
+      else {
+        res.send('No record')
+      }
 }
 
 exports.AttendanceList = function (req, res) {
