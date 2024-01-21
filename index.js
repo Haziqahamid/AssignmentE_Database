@@ -85,9 +85,7 @@ app.post('/login', async (req, res) => {
   console.log('login', req.body);
   const { username, password, role } = req.body;
 
-  client.db("Assignment").collection("User").find({ "username": username }).toArray().then((result) => {
-    const user = result[0]
-
+  client.db("Assignment").collection("User").findOne({ "username": username }).then((user) => {
     const hash = bcrypt.hashSync(password, 10);
     console.log(user);
 
@@ -106,7 +104,7 @@ app.post('/login', async (req, res) => {
         } else {
           res.send('wrong password')
         }
-      })
+      });
     } else {
       res.send('user not found')
     }

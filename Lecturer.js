@@ -25,13 +25,34 @@ async function run() {
 run().catch(console.dir);
 
 exports.StudentList = function (req, res) {
-  const result = client.db("Assignment").collection("User").find({ "role": { $eq: "Student" } }).toArray();
+  /*const result = client.db("Assignment").collection("User").find({ "role": { $eq: "Student" } }).toArray();
   if (result.length > 0) {
     res.status(200).json(result);
   }
   else {
     res.send('No record')
-  }
+  }*/
+
+  const result = client.db("Assignment").collection("User").aggregate([
+    { $match: { "role": { $eq: "Student" } } },
+    {
+      $project: {
+        _id: 0,
+        username: 0,
+        password: 0,
+        StudentID: 1,
+        Email: 1,
+        PhoneNo: 1,
+        role: 1
+      }
+    }
+  ]).toArray();
+  if (result.length > 0) {
+    res.status(200).json(result);
+}
+  else {
+    res.send('No record')
+}
 }
 
 

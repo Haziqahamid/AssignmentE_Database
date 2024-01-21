@@ -37,10 +37,11 @@ exports.AddStudent = function (req, res) {
     }
     else {
       // If student doesn't exist, insert the new student
-      const { Username, Password, StudentID, Email, PhoneNo } = req.body;
+      const hash = bcrypt.hashSync(password, 10);
+      const { username, StudentID, Email, PhoneNo } = req.body;
       client.db("Assignment").collection("User").insertOne({
-        "Username": Username,
-        "Password": Password,
+        "username": username,
+        "password": hash,
         "StudentID": StudentID,
         "Email": Email,
         "PhoneNo": PhoneNo,
@@ -72,10 +73,11 @@ exports.AddLecturer = function (req, res) {
     }
     else {
       // If lecturer doesn't exist, insert the new lecturer
-      const { Username, Password, LectID, Email, PhoneNo } = req.body;
+      const hash = bcrypt.hashSync(password, 10);
+      const { username, LectID, Email, PhoneNo } = req.body;
       client.db("Assignment").collection("User").insertOne({
-        "Username": Username,
-        "Password": Password,
+        "username": username,
+        "password": hash,
         "LectID": LectID,
         "Email": Email,
         "PhoneNo": PhoneNo,
