@@ -24,61 +24,58 @@ async function run() {
 }
 run().catch(console.dir);
 
-exports.StudentList = function (req,res) {
-    client.db("Assignment").collection("User").find({
-    "role": {$eq: "Student"}
-    }).toArray().then((result) => {
-    if (result.length > 0) {
-      res.status(200).json(result);
-    } else {
-        res.send('No record')
-    }
-  })
+exports.StudentList = function (req, res) {
+  const result = client.db("Assignment").collection("User").find({ "role": { $eq: "Student" } }).toArray();
+  if (result.length > 0) {
+    res.status(200).json(result);
   }
+  else {
+    res.send('No record')
+  }
+}
 
 
-  exports.AttendanceList = function (req,res) {
-    client.db("Assignment").collection("Attendance").find({
-    "Subject": {$eq: req.body.Subject}
-    }).toArray().then((result) => {
+exports.AttendanceList = function (req, res) {
+  client.db("Assignment").collection("Attendance").find({
+    "Subject": { $eq: req.body.Subject }
+  }).toArray().then((result) => {
     if (result.length > 0) {
       res.status(200).json(result);
       res.status(400).send('View Successful')
     } else {
-        res.send('No record')
+      res.send('No record')
     }
   })
-  }
+}
 
-  exports.AddSubject = function (req,res) {
-    const {Code} = req.body;
-  
-    // Check if the subject already exists
-    client.db("Assignment").collection("Subject").findOne({ "Code": Code}).then((user) => {
-      if (user) {
-        console.log("Subject already exists.");
-        res.status(409).send('Subject already exists.');
-      }
-      else {
-        // If subject doesn't exist, insert the new subject
-        const {Code, Name, Credit} = req.body;
-        client.db("Assignment").collection("Subject").insertOne({
-          "Code": Code,
-          "Name": Name,
-          "Credit": Credit
-        }).then((result) => {
-          console.log('Subject added');
-          res.send('Subject added');
-        })
-          .catch((err) => {
-            console.error(err);
-            res.status(500).send('Internal Server Error.');
-          });
-      }
-    })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Internal Server Error.');
-      });
-  };
-  
+exports.AddSubject = function (req, res) {
+  const { Code } = req.body;
+
+  // Check if the subject already exists
+  client.db("Assignment").collection("Subject").findOne({ "Code": Code }).then((user) => {
+    if (user) {
+      console.log("Subject already exists.");
+      res.status(409).send('Subject already exists.');
+    }
+    else {
+      // If subject doesn't exist, insert the new subject
+      const { Code, Name, Credit } = req.body;
+      client.db("Assignment").collection("Subject").insertOne({
+        "Code": Code,
+        "Name": Name,
+        "Credit": Credit
+      }).then((result) => {
+        console.log('Subject added');
+        res.send('Subject added');
+      })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send('Internal Server Error.');
+        });
+    }
+  })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Internal Server Error.');
+    });
+};
