@@ -97,14 +97,14 @@ exports.AddLecturer = function (req, res) {
 };
 
 exports.UpdatePassword = function (req, res) {
-  const { Username, Password } = req.body;
+  const { username, password } = req.body;
 
   // Check if the Username exists
   client.db("Assignment").collection("User").findOne({ "Username": Username })
     .then((user) => {
       if (user) {
         // Hash the new password
-        bcrypt.hash(Password, 10, (hashError, hashPassword) => {
+        bcrypt.hash(password, 10, (hashError, hashPassword) => {
           if (hashError) {
             console.error(hashError);
             return res.status(500).send('Error hashing password.');
@@ -112,8 +112,8 @@ exports.UpdatePassword = function (req, res) {
 
           // Update the password for the found user
           client.db("Assignment").collection("User").updateOne(
-            { "Username": Username }, // Filter criteria
-            { $set: { "Password": hashPassword } } // Update operation with hashed password
+            { "username": username }, // Filter criteria
+            { $set: { "password": hashPassword } } // Update operation with hashed password
           ).then((result) => {
             console.log('Password Updated');
             res.send('Password Updated');
