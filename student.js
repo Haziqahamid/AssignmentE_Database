@@ -26,9 +26,9 @@ run().catch(console.dir);
 
 exports.recordAttendance = function (req, res) {
 
-  const { Username, StudentID, Subject, Program, Date, Time } = req.body;
+  const { username, StudentID, Subject, Program, Date, Time } = req.body;
   client.db("Assignment").collection('Attendance').insertOne({
-    "Username": Username,
+    "username": username,
     "StudentID": StudentID,
     "Subject": Subject,
     "Program": Program,
