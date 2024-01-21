@@ -136,12 +136,12 @@ app.post('/recordAttendance', StudentToken, async (req, res) => {
   Student.recordAttendance(req, res);
 })
 
-app.get('/attendanceDetails/:StudentID', async (req, res) => {
+app.get('/attendanceDetails/:StudentID', StudentAndLecturerToken, async (req, res) => {
   const StudentID = req.params;
   Student.attendanceDetails(req, res);
 })
 
-app.get('/fullAttendanceReport', async (req, res) => {
+app.get('/fullAttendanceReport', StudentAndLecturerToken, async (req, res) => {
   Student.fullAttendanceReport(req, res);
 })
 
@@ -155,7 +155,7 @@ app.post('/AddSubject', AdminAndLecturerToken, async (req, res) => {
   Lecturer.AddSubject(req, res);
 })
 
-app.post('/AttendanceList', async (req, res) => {
+app.post('/AttendanceList', LecturerToken, async (req, res) => {
   console.log(req.body);
   Lecturer.AttendanceList(req, res);
 })
@@ -254,6 +254,28 @@ function StudentToken(req, res, next) {
     else {
       console.log(decoded);
       if (decoded.role != 'Student') {
+        return res.status(401).send('Again Unauthorized');
+      }
+    }
+    next();
+  });
+}
+
+function StudentAndLecturerToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  if (!header) {
+    return res.sendStatus(401).send('Unauthorized');
+  }
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    console.log(err)
+    if (err) {
+      return res.sendStatus(401).send('Unauthorized');
+    }
+    else {
+      console.log(decoded);
+      if (decoded.role != 'Lecturer' && decoded.role != 'Student') {
         return res.status(401).send('Again Unauthorized');
       }
     }
