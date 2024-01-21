@@ -25,6 +25,7 @@ async function run() {
 run().catch(console.dir);
 
 exports.StudentList = function (req, res) {
+  console.log(req.body);
   const result = client.db("Assignment").collection("User").find(
     { "role": { $eq: "Student" } }).toArray();
   if (result.length > 0) {
