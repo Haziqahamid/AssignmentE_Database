@@ -155,7 +155,7 @@ app.post('/AddSubject', AdminAndLecturerToken, async (req, res) => {
   Lecturer.AddSubject(req, res);
 })
 
-app.post('/AttendanceList', LecturerToken, async (req, res) => {
+app.get('/AttendanceList', LecturerToken, async (req, res) => {
   console.log(req.body);
   Lecturer.AttendanceList(req, res);
 })
