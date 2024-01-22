@@ -145,7 +145,7 @@ app.get('/fullAttendanceReport', StudentAndLecturerToken, async (req, res) => {
   Student.fullAttendanceReport(req, res);
 })
 
-app.post('/StudentList', AdminAndLecturerToken, async (req, res) => {
+app.get('/StudentList', AdminAndLecturerToken, async (req, res) => {
   console.log(req.body);
   Lecturer.StudentList(req, res);
 })
