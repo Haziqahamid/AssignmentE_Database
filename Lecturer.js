@@ -25,6 +25,22 @@ async function run() {
 run().catch(console.dir);
 
 exports.StudentList = function (req, res) {
+  client.db("Assignment").collection("User").find({
+    role: "Student",
+    LecturerID: req.user.username // Restrict to students assigned to the lecturer
+  }).toArray().then((result) => {
+    if (result.length > 0) {
+      res.status(200).json(result);
+    } else {
+      res.send('No student records found.');
+    }
+  }).catch(err => {
+    console.error('Error fetching student list:', err);
+    res.status(500).send('Internal Server Error');
+  });
+};
+
+/*exports.StudentList = function (req, res) {
   console.log(req.body);
   client.db("Assignment").collection("User").find({ 
     "role": { $eq: "Student" } 
@@ -37,7 +53,7 @@ exports.StudentList = function (req, res) {
         res.send('No record')
       }
     })
-}
+}*/
 
 exports.AttendanceList = function (req, res) {
   client.db("Assignment").collection("Attendance").find({

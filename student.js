@@ -48,6 +48,34 @@ exports.recordAttendance = function (req, res) {
 exports.attendanceDetails = async function (req, res) {
   console.log(req.body);
   const { StudentID } = req.params;
+  
+  // Get the logged-in student's StudentID from the token
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    if (err) {
+      return res.status(401).send('Unauthorized');
+    }
+
+    // Ensure the StudentID in the token matches the StudentID in the route
+    if (decoded.role !== 'Student' || decoded.user !== StudentID) {
+      return res.status(403).send('Access denied. You can only view your own attendance.');
+    }
+
+    // If the token is valid and the StudentID matches
+    client.db("Assignment").collection('Attendance').find({ "StudentID": StudentID }).toArray()
+      .then((attendance) => {
+        res.status(200).send(attendance);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error fetching attendance details');
+      });
+  });
+};
+
+/*exports.attendanceDetails = async function (req, res) {
+  console.log(req.body);
+  const { StudentID } = req.params;
 
   try {
     const okay = await client.db("Assignment").collection('Attendance').find({ "StudentID": { $eq: StudentID } }).toArray();
@@ -58,7 +86,7 @@ exports.attendanceDetails = async function (req, res) {
     console.error(err);
     res.status(500).send('Error fetching attendance details');
   }
-};
+};*/
 
 
 exports.fullAttendanceReport = async function (req, res) {
