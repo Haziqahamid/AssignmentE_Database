@@ -9,7 +9,6 @@ const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
 
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://Assignment:lJfAGDdoR6APLWSC@cluster0.ruowk6x.mongodb.net/?retryWrites=true&w=majority";
 
