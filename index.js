@@ -302,7 +302,7 @@ function authToken(requiredRole) {
   };
 }
 
-function AdminToken(req, res, next) {
+/*function AdminToken(req, res, next) {
   let header = req.headers.authorization;
 
   if (!header) {
@@ -410,4 +410,4 @@ function StudentAndLecturerToken(req, res, next) {
     }
     next();
   });
-}
+}*/
