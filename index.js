@@ -217,12 +217,17 @@ app.patch('/UpdatePassword', async (req, res) => {
   AcademicAdministrator.UpdatePassword(req, res);
 })*/
 
-app.post('/recordAttendance', StudentToken, async (req, res) => {
+app.post('/recordAttendance', authToken('Student'), async (req, res) => {
   console.log(req.body);
   Student.recordAttendance(req, res);
 })
 
-app.get('/attendanceDetails/:StudentID', StudentToken, async (req, res) => {
+/*app.post('/recordAttendance', StudentToken, async (req, res) => {
+  console.log(req.body);
+  Student.recordAttendance(req, res);
+})*/
+
+app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
   const StudentID = req.params.StudentID;
   const token = req.headers.authorization.split(' ')[1];
   
@@ -240,6 +245,25 @@ app.get('/attendanceDetails/:StudentID', StudentToken, async (req, res) => {
     Student.attendanceDetails(req, res);
   });
 });
+
+/*app.get('/attendanceDetails/:StudentID', StudentToken, async (req, res) => {
+  const StudentID = req.params.StudentID;
+  const token = req.headers.authorization.split(' ')[1];
+  
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    if (err) {
+      return res.status(401).send('Unauthorized');
+    }
+
+    // If the logged-in user is not the same as the StudentID in the URL, deny access
+    if (decoded.role !== 'Student' || decoded.user !== StudentID) {
+      return res.status(403).send('You can only view your own attendance details.');
+    }
+
+    // If valid, call the student's attendanceDetails function
+    Student.attendanceDetails(req, res);
+  });
+});*/
 
 /*app.get('/attendanceDetails/:StudentID', StudentAndLecturerToken, async (req, res) => {
   const StudentID = req.params;
@@ -260,10 +284,15 @@ app.post('/AddSubject', AdminAndLecturerToken, async (req, res) => {
   Lecturer.AddSubject(req, res);
 })
 
-app.get('/AttendanceList', LecturerToken, async (req, res) => {
+app.get('/AttendanceList', authToken('Lecturer'), async (req, res) => {
   console.log(req.body);
   Lecturer.AttendanceList(req, res);
 })
+
+/*app.get('/AttendanceList', LecturerToken, async (req, res) => {
+  console.log(req.body);
+  Lecturer.AttendanceList(req, res);
+})*/
 
 // Improved Logout Endpoint
 app.post('/Logout', async (req, res) => {
