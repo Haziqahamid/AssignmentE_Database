@@ -270,14 +270,14 @@ app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) 
   Student.attendanceDetails(req, res);
 })*/
 
-app.get('/fullAttendanceReport', StudentAndLecturerToken, async (req, res) => {
+/*app.get('/fullAttendanceReport', StudentAndLecturerToken, async (req, res) => {
   Student.fullAttendanceReport(req, res);
-})
-
-/*app.get('/StudentList', AdminAndLecturerToken, async (req, res) => {
-  console.log(req.body);
-  Lecturer.StudentList(req, res);
 })*/
+
+app.get('/StudentList', authToken('Admin'), async (req, res) => {
+  console.log(req.body);
+  AcademicAdministrator.StudentList(req, res);
+})
 
 app.post('/AddSubject', AdminAndLecturerToken, async (req, res) => {
   console.log(req.body);
@@ -373,7 +373,7 @@ function LecturerToken(req, res, next) {
     }
     next();
   });
-}
+}*/
 
 function AdminAndLecturerToken(req, res, next) {
   let header = req.headers.authorization;
@@ -397,7 +397,7 @@ function AdminAndLecturerToken(req, res, next) {
   });
 }
 
-function StudentToken(req, res, next) {
+/*function StudentToken(req, res, next) {
   let header = req.headers.authorization;
 
   if (!header) {

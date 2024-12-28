@@ -187,3 +187,18 @@ exports.AddPrograms = function (req, res) {
       res.status(500).send('Internal Server Error.');
     });
 };
+
+exports.StudentList = function (req, res) {
+  console.log(req.body);
+  client.db("Assignment").collection("User").find({ 
+    "role": { $eq: "Student" } 
+  }).toArray().then((result) => {
+      if (result.length > 0) {
+        res.status(200).json(result);
+        res.status(400).send('View Successful')
+      }
+      else {
+        res.send('No record')
+      }
+    })
+}

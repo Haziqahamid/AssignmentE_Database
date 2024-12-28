@@ -15,7 +15,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db("Admin").command({ ping: 1 });
+    await client.db("Lecturer").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
@@ -98,4 +98,4 @@ exports.AddSubject = function (req, res) {
       console.error(err);
       res.status(500).send('Internal Server Error.');
     });
-};
+}
