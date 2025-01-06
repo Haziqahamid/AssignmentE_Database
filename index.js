@@ -167,7 +167,7 @@ app.post('/Login', loginLimiter, async (req, res) => {
 
   // Generate token using the refactored function
   const token = createUserToken(user);
-  
+
   res.send({ message: "Login successful.", token });
 });
 
@@ -240,7 +240,7 @@ app.post('/recordAttendance', authToken('Student'), async (req, res) => {
 
 app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
   const StudentID = req.params.StudentID;
-  const token = req.headers.authorization.split(' ')[1];
+  const token = req.headers.authorization?.split(' ')[1];
   
   jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
     if (err) {
@@ -257,26 +257,8 @@ app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) 
   });
 });
 
-/*app.get('/attendanceDetails/:StudentID', StudentToken, async (req, res) => {
-  const StudentID = req.params.StudentID;
-  const token = req.headers.authorization.split(' ')[1];
-  
-  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
-    if (err) {
-      return res.status(401).send('Unauthorized');
-    }
 
-    // If the logged-in user is not the same as the StudentID in the URL, deny access
-    if (decoded.role !== 'Student' || decoded.user !== StudentID) {
-      return res.status(403).send('You can only view your own attendance details.');
-    }
-
-    // If valid, call the student's attendanceDetails function
-    Student.attendanceDetails(req, res);
-  });
-});*/
-
-/*app.get('/attendanceDetails/:StudentID', StudentAndLecturerToken, async (req, res) => {
+/*app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
   const StudentID = req.params;
   Student.attendanceDetails(req, res);
 })*/
