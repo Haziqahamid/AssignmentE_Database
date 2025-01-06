@@ -66,8 +66,14 @@ function validateInput(fields, reqBody) {
   return null;
 }
 
-// Generate Access Token
-const token = generateAccessToken({ username: user.username, role: user.role, StudentID: user.StudentID });
+/// Function to handle token generation
+function createUserToken(user) {
+  return generateAccessToken({ 
+      username: user.username, 
+      role: user.role, 
+      StudentID: user.StudentID 
+  });
+}
 
 // Improved Registration Endpoint
 app.post('/register', async (req, res) => {
@@ -159,6 +165,9 @@ app.post('/Login', loginLimiter, async (req, res) => {
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) return res.status(401).send("Incorrect password.");
 
+  // Generate token using the refactored function
+  const token = createUserToken(user);
+  
   res.send({ message: "Login successful.", token });
 });
 
