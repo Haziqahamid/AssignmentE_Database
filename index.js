@@ -238,7 +238,7 @@ app.post('/recordAttendance', authToken('Student'), async (req, res) => {
   Student.recordAttendance(req, res);
 })*/
 
-app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
+/*app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
   const StudentID = req.params.StudentID;
   const token = req.headers.authorization?.split(' ')[1];
   
@@ -248,20 +248,20 @@ app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) 
     }
 
     // If the logged-in user is not the same as the StudentID in the URL, deny access
-    if (decoded.role !== 'Student' || decoded.user !== StudentID) {
+    else if (decoded.StudentID !== StudentID) {
       return res.status(403).send('You can only view your own attendance details.');
     }
 
     // If valid, call the student's attendanceDetails function
     Student.attendanceDetails(req, res);
   });
-});
+});*/
 
 
-/*app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
+app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
   const StudentID = req.params;
   Student.attendanceDetails(req, res);
-})*/
+})
 
 /*app.get('/fullAttendanceReport', StudentAndLecturerToken, async (req, res) => {
   Student.fullAttendanceReport(req, res);

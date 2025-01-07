@@ -45,7 +45,7 @@ exports.recordAttendance = function (req, res) {
     });
 }
 
-exports.attendanceDetails = async function (req, res) {
+/*exports.attendanceDetails = async function (req, res) {
   console.log(req.body);
   const { StudentID } = req.params;
   
@@ -71,9 +71,9 @@ exports.attendanceDetails = async function (req, res) {
         res.status(500).send('Error fetching attendance details');
       });
   });
-}
+}*/
 
-/*exports.attendanceDetails = async function (req, res) {
+exports.attendanceDetails = async function (req, res) {
   console.log(req.body);
   const { StudentID } = req.params;
 
@@ -89,7 +89,7 @@ exports.attendanceDetails = async function (req, res) {
 };
 
 
-exports.fullAttendanceReport = async function (req, res) {
+/*exports.fullAttendanceReport = async function (req, res) {
   console.log(req.body);
   try {
     const result = await client.db('Assignment').collection('Attendance').find({}).toArray();
