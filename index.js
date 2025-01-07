@@ -140,8 +140,23 @@ app.post('/recordAttendance', authToken('Student'), async (req, res) => {
 })
 
 app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
-  const StudentID = req.params.StudentID;
-  Student.attendanceDetails(req, res);
+  console.log(req.body);
+  const { StudentID } = req.params;
+  
+  // Get the logged-in student's StudentID from the token
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, "Assignment-GroupE", function (err, decoded) {
+    if (err) {
+      return res.status(401).send('Unauthorized');
+    }
+
+    // Ensure the StudentID in the token matches the StudentID in the route
+    if (decoded.role !== 'Student' || decoded.user !== StudentID) {
+      return res.status(403).send('Access denied. You can only view your own attendance.');
+    }
+
+    Student.attendanceDetails(req, res);
+  });
 })
 
 app.get('/StudentList', authToken('Admin'), async (req, res) => {
