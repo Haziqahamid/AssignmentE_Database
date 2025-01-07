@@ -40,21 +40,6 @@ exports.StudentList = function (req, res) {
   });
 };
 
-/*exports.StudentList = function (req, res) {
-  console.log(req.body);
-  client.db("Assignment").collection("User").find({ 
-    "role": { $eq: "Student" } 
-  }).toArray().then((result) => {
-      if (result.length > 0) {
-        res.status(200).json(result);
-        res.status(400).send('View Successful')
-      }
-      else {
-        res.send('No record')
-      }
-    })
-}*/
-
 exports.AttendanceList = function (req, res) {
   client.db("Assignment").collection("Attendance").find({
     "Subject": { $eq: req.body.Subject }

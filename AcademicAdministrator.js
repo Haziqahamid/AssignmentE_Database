@@ -118,45 +118,6 @@ exports.UpdatePassword = async function (req, res) {
   }
 };
 
-/*exports.UpdatePassword = function (req, res) {
-  const { username, password } = req.body;
-
-  // Check if the Username exists
-  client.db("Assignment").collection("User").findOne({ "Username": Username })
-    .then((user) => {
-      if (user) {
-        // Hash the new password
-        bcrypt.hash(password, 10, (hashError, hashPassword) => {
-          if (hashError) {
-            console.error(hashError);
-            return res.status(500).send('Error hashing password.');
-          }
-
-          // Update the password for the found user
-          client.db("Assignment").collection("User").updateOne(
-            { "username": username }, // Filter criteria
-            { $set: { "password": hashPassword } } // Update operation with hashed password
-          ).then((result) => {
-            console.log('Password Updated');
-            res.send('Password Updated');
-          }).catch((updateError) => {
-            console.error(updateError);
-            res.status(500).send('Failed to update password.');
-          });
-        });
-      } else {
-        // Username doesn't exist
-        console.log("Wrong Username");
-        res.status(409).send('Wrong Username');
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Internal Server Error.');
-    });
-};*/
-
-
 exports.AddPrograms = function (req, res) {
   const { Code } = req.body;
 
