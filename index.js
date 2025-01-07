@@ -140,7 +140,7 @@ app.post('/recordAttendance', authToken('Student'), async (req, res) => {
 })
 
 app.get('/attendanceDetails/:StudentID', authToken('Student'), async (req, res) => {
-  const StudentID = req.params;
+  const StudentID = req.params.StudentID;
   Student.attendanceDetails(req, res);
 })
 
