@@ -46,6 +46,25 @@ exports.recordAttendance = function (req, res) {
 }
 
 exports.attendanceDetails = async function (req, res) {
+  const { StudentID } = req.params; // StudentID from the request parameters
+  const userStudentID = req.user.StudentID; // StudentID from the authenticated user's JWT token
+
+  if (StudentID !== userStudentID) {
+    return res.status(403).send('Unauthorized: You can only view your own attendance.');
+  }
+
+  try {
+    const attendanceRecords = await client.db("Assignment").collection('Attendance')
+      .find({ "StudentID": StudentID }).toArray();
+
+    res.status(200).send(attendanceRecords);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching attendance details');
+  }
+};
+
+/*exports.attendanceDetails = async function (req, res) {
   console.log(req.body);
   const { StudentID } = req.params;
 
@@ -58,4 +77,4 @@ exports.attendanceDetails = async function (req, res) {
     console.error(err);
     res.status(500).send('Error fetching attendance details');
   }
-};
+};*/
