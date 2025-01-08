@@ -63,18 +63,3 @@ exports.attendanceDetails = async function (req, res) {
     res.status(500).send('Error fetching attendance details');
   }
 };
-
-/*exports.attendanceDetails = async function (req, res) {
-  console.log(req.body);
-  const { StudentID } = req.params;
-
-  try {
-    const okay = await client.db("Assignment").collection('Attendance').find({ "StudentID": { $eq: StudentID } }).toArray();
-    res.status(200).send(okay);
-  }
-
-  catch (err) {
-    console.error(err);
-    res.status(500).send('Error fetching attendance details');
-  }
-};*/
