@@ -53,7 +53,7 @@ app.use(globalLimiter);
 const loginLimiter = rateLimit({
   windowMs: 30 * 60 * 1000, // 5 minutes
   max: 3, // Limit each IP to 5 login attempts per 5 minutes
-  message: 'Too many login attempts. Please try again after 5 minutes.',
+  message: 'Too many login attempts. Please try again after 30 minutes.',
 });
 
 // Helper Function: Validate Input Data
