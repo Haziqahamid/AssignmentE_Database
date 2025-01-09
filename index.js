@@ -185,13 +185,6 @@ app.post('/Logout', (req, res) => {
   }
 });
 
-// Improved Logout Endpoint
-// app.post('/Logout', async (req, res) => {
-//   console.log("Logout request received.");
-//   // Token invalidation logic can be implemented if needed
-//   res.send("See you next time!");
-// });
-
 // Test Token Validation
 app.get('/TestToken', verifyToken, (req, res) => {
   res.send("Your token is valid. You have access to this protected resource.");
