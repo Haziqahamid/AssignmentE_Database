@@ -75,6 +75,19 @@ function createUserToken(user) {
   });
 }
 
+const invalidatedTokens = new Set(); // In-memory store for invalidated tokens
+
+// Middleware to check for invalidated tokens
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (invalidatedTokens.has(token)) {
+    return res.status(401).send("Token is invalid. Please log in again.");
+  }
+
+  next(); // Proceed if token is not invalidated
+};
+
 // Improved Registration Endpoint
 app.post('/register', async (req, res) => {
   const { username, password, role, Email, PhoneNo } = req.body;
@@ -159,13 +172,30 @@ app.get('/AttendanceList', authToken('Lecturer'), async (req, res) => {
   Lecturer.AttendanceList(req, res);
 })
 
-// Improved Logout Endpoint
-app.post('/Logout', async (req, res) => {
-  console.log("Logout request received.");
-  // Token invalidation logic can be implemented if needed
-  res.send("See you next time!");
+// Logout endpoint
+app.post('/Logout', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1]; // Extract token from Authorization header
+
+  if (token) {
+    invalidatedTokens.add(token); // Add token to invalidation list
+    console.log("Token invalidated:", token);
+    res.status(200).send("You have been logged out.");
+  } else {
+    res.status(400).send("No token provided.");
+  }
 });
 
+// Improved Logout Endpoint
+// app.post('/Logout', async (req, res) => {
+//   console.log("Logout request received.");
+//   // Token invalidation logic can be implemented if needed
+//   res.send("See you next time!");
+// });
+
+// Test Token Validation
+app.get('/TestToken', verifyToken, (req, res) => {
+  res.send("Your token is valid. You have access to this protected resource.");
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
