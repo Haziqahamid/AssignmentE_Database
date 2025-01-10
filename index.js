@@ -101,9 +101,14 @@ app.post('/register', async (req, res) => {
   if (existingUser) return res.status(409).send("Username already exists.");
 
   // Ensure strong password
-  if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
-    return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, and a number.");
+  // if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
+  //   return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, and a number.");
+  // }
+  // Ensure strong password
+  if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(password)) {
+  return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, a number, and a special character.");
   }
+
 
   const hash = bcrypt.hashSync(password, 10);
   const userObject = { username, password: hash, Email, PhoneNo, role };
