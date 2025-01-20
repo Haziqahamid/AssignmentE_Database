@@ -79,7 +79,7 @@ const invalidatedTokens = new Set(); // In-memory store for invalidated tokens
 
 // Middleware to check for invalidated tokens
 const verifyToken = (req, res, next) => {
-    const token = req.headers.authorization ? .split(' ')[1];
+    const token = req.headers.authorization?.split(' ')[1];
 
     if (invalidatedTokens.has(token)) {
         return res.status(401).send("Token is invalid. Please log in again.");
@@ -225,7 +225,7 @@ app.get('/AttendanceList', authToken('Lecturer'), async(req, res) => {
 
 // Logout endpoint
 app.post('/Logout', (req, res) => {
-    const token = req.headers.authorization ? .split(' ')[1]; // Extract token from Authorization header
+    const token = req.headers.authorization?.split(' ')[1]; // Extract token from Authorization header
 
     if (token) {
         invalidatedTokens.add(token); // Add token to invalidation list
