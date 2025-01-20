@@ -124,7 +124,7 @@ exports.UpdatePassword = async function (req, res) {
   if (!username || !password) return res.status(400).send('Username and Password are required.');
 
   // Ensure strong password (at least 8 characters, upper/lowercase letters, a number, and special characters)
-  if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(password)) {
+  if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(password)) {
     return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, a number, and a special character.");
   }
 
@@ -144,6 +144,7 @@ exports.UpdatePassword = async function (req, res) {
     res.status(500).send('Failed to update password.');
   }
 };
+
 
 exports.AddPrograms = function (req, res) {
   const { Code } = req.body;
