@@ -96,10 +96,37 @@ exports.AddLecturer = function (req, res) {
     });
 };
 
+// exports.UpdatePassword = async function (req, res) {
+//   const { username, password } = req.body;
+
+//   if (!username || !password) return res.status(400).send('Username and Password are required.');
+
+//   const user = await client.db("Assignment").collection("User").findOne({ username });
+//   if (!user) return res.status(404).send('User not found.');
+
+//   const hashedPassword = bcrypt.hashSync(password, 10);
+
+//   try {
+//     await client.db("Assignment").collection("User").updateOne(
+//       { username },
+//       { $set: { password: hashedPassword } }
+//     );
+//     res.send('Password updated successfully. Please use the new password to log in.');
+//   } catch (error) {
+//     console.error('Error updating password:', error);
+//     res.status(500).send('Failed to update password.');
+//   }
+// };
+
 exports.UpdatePassword = async function (req, res) {
   const { username, password } = req.body;
 
   if (!username || !password) return res.status(400).send('Username and Password are required.');
+
+  // Ensure strong password (at least 8 characters, upper/lowercase letters, a number, and special characters)
+  if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(password)) {
+    return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, a number, and a special character.");
+  }
 
   const user = await client.db("Assignment").collection("User").findOne({ username });
   if (!user) return res.status(404).send('User not found.');
