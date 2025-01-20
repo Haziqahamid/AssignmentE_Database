@@ -24,7 +24,7 @@ const client = new MongoClient(uri, {
 // Global Rate Limiting
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per 15 minutes
+  max: 5, // Limit each IP to 5 requests per 15 minutes
   message: 'Too many requests from this IP, please try again after 15 minutes.',
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false,  // Disable the `X-RateLimit-*` headers
@@ -88,9 +88,12 @@ const verifyToken = (req, res, next) => {
   next(); // Proceed if token is not invalidated
 };
 
+// Predefined admin token or whitelist
+const ADMIN_EMAIL_WHITELIST = ["Azie1205@gmail.com", "authorized.Azie1205@gmail.com"]; // Replace with actual authorized emails
+
 // Improved Registration Endpoint
 app.post('/register', async (req, res) => {
-  const { username, password, role, Email, PhoneNo } = req.body;
+  const { username, password, role, Email, PhoneNo, adminToken } = req.body;
 
   // Validate Input
   const missingField = validateInput(['username', 'password', 'role', 'Email', 'PhoneNo'], req.body);
@@ -100,23 +103,29 @@ app.post('/register', async (req, res) => {
   const existingUser = await client.db("Assignment").collection("User").findOne({ username });
   if (existingUser) return res.status(409).send("Username already exists.");
 
-  // Ensure strong password
-  // if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
-  //   return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, and a number.");
-  // }
-  // Ensure strong password
+  // Ensure strong password (at least 8 characters, upper/lowercase letters, a number, and special characters)
   if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(password)) {
-  return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, a number, and a special character.");
+    return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, a number, and a special character.");
   }
 
+  // Secure Admin Registration
+  if (role === 'Admin') {
+    // Validate admin token or email
+    if (!ADMIN_EMAIL_WHITELIST.includes(Email)) {
+      return res.status(403).send("Unauthorized to register as Admin.");
+    }
+  }
 
+  // Hash password before storing
   const hash = bcrypt.hashSync(password, 10);
   const userObject = { username, password: hash, Email, PhoneNo, role };
 
+  // Add role-specific fields
   if (role === 'Student') userObject.StudentID = req.body.StudentID;
   if (role === 'Lecturer') userObject.LectID = req.body.LectID;
 
   try {
+    // Insert new user into the database
     await client.db("Assignment").collection("User").insertOne(userObject);
     res.send("Register Success!");
   } catch (error) {
@@ -124,6 +133,43 @@ app.post('/register', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// Improved Registration Endpoint
+// app.post('/register', async (req, res) => {
+//   const { username, password, role, Email, PhoneNo } = req.body;
+
+//   // Validate Input
+//   const missingField = validateInput(['username', 'password', 'role', 'Email', 'PhoneNo'], req.body);
+//   if (missingField) return res.status(400).send(missingField);
+
+//   // Check for existing username
+//   const existingUser = await client.db("Assignment").collection("User").findOne({ username });
+//   if (existingUser) return res.status(409).send("Username already exists.");
+
+//   // Ensure strong password
+//   // if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
+//   //   return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, and a number.");
+//   // }
+//   // Ensure strong password
+//   if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(password)) {
+//   return res.status(400).send("Password must be at least 8 characters long, include upper/lowercase letters, a number, and a special character.");
+//   }
+
+
+//   const hash = bcrypt.hashSync(password, 10);
+//   const userObject = { username, password: hash, Email, PhoneNo, role };
+
+//   if (role === 'Student') userObject.StudentID = req.body.StudentID;
+//   if (role === 'Lecturer') userObject.LectID = req.body.LectID;
+
+//   try {
+//     await client.db("Assignment").collection("User").insertOne(userObject);
+//     res.send("Register Success!");
+//   } catch (error) {
+//     console.error("Registration Error:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 // Improved Login Endpoint
 app.post('/Login', loginLimiter, async (req, res) => {
