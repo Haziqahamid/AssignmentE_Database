@@ -21,15 +21,6 @@ const client = new MongoClient(uri, {
     }
 });
 
-// Global Rate Limiting
-const globalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // Limit each IP to 5 requests per 15 minutes
-    message: 'Too many requests from this IP, please try again after 15 minutes.',
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
-
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
@@ -45,6 +36,15 @@ async function run() {
 run().catch(console.dir)
 
 app.use(express.json())
+
+// Global Rate Limiting
+const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 requests per 15 minutes
+    message: 'Too many requests from this IP, please try again after 15 minutes.',
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 // Apply global rate limiter to all requests
 app.use(globalLimiter);
