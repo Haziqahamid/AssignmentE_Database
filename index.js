@@ -41,7 +41,7 @@ app.use(express.json())
 const globalLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minutes
     max: 5, // Limit each IP to 5 requests per minutes
-    message: 'Too many requests from this IP, please try again after 15 minutes.',
+    message: 'Too many requests from this IP, please try again after 1 minutes.',
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
