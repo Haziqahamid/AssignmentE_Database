@@ -49,12 +49,27 @@ const globalLimiter = rateLimit({
 // Apply global rate limiter to all requests
 app.use(globalLimiter);
 
-// Custom Rate Limiting for Login Endpoint
+// // Custom Rate Limiting for Login Endpoint
+// const loginLimiter = rateLimit({
+//     windowMs: 30 * 60 * 1000, // 30 minutes
+//     max: 3, // Limit each IP to 3 login attempts per 30 minutes
+//     message: 'Too many login attempts. Please try again after 30 minutes.',
+// });
+
+// Custom Rate Limiting for Login Endpoint with Remaining Attempts
 const loginLimiter = rateLimit({
     windowMs: 30 * 60 * 1000, // 30 minutes
     max: 3, // Limit each IP to 3 login attempts per 30 minutes
-    message: 'Too many login attempts. Please try again after 30 minutes.',
+    handler: (req, res) => {
+        res.status(429).send({
+            message: `Too many login attempts. Please try again after 30 minutes.`,
+            remainingAttempts: 0,
+        });
+    },
+    keyGenerator: (req) => req.ip, // Rate limit by IP address
+    skipSuccessfulRequests: true, // Reset attempts on successful login
 });
+
 
 // Helper Function: Validate Input Data
 function validateInput(fields, reqBody) {
@@ -172,20 +187,45 @@ app.post('/register', async(req, res) => {
 // });
 
 // Improved Login Endpoint
-app.post('/Login', loginLimiter, async(req, res) => {
+// app.post('/Login', loginLimiter, async(req, res) => {
+//     const { username, password } = req.body;
+
+//     // Validate Input
+//     const missingField = validateInput(['username', 'password'], req.body);
+//     if (missingField) return res.status(400).send(missingField);
+
+//     const user = await client.db("Assignment").collection("User").findOne({ username });
+//     if (!user) return res.status(404).send("User not found.");
+
+//     const validPassword = await bcrypt.compare(password, user.password);
+//     if (!validPassword) return res.status(401).send("Incorrect password.");
+
+//     // Generate token using the refactored function
+//     const token = createUserToken(user);
+
+//     res.send({ message: "Login successful.", token });
+// });
+
+app.post('/Login', loginLimiter, async (req, res) => {
     const { username, password } = req.body;
 
     // Validate Input
     const missingField = validateInput(['username', 'password'], req.body);
-    if (missingField) return res.status(400).send(missingField);
+    if (missingField) {
+        return res.status(400).send({ message: missingField, remainingAttempts: req.rateLimit.remaining });
+    }
 
     const user = await client.db("Assignment").collection("User").findOne({ username });
-    if (!user) return res.status(404).send("User not found.");
+    if (!user) {
+        return res.status(404).send({ message: "User not found.", remainingAttempts: req.rateLimit.remaining });
+    }
 
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) return res.status(401).send("Incorrect password.");
+    if (!validPassword) {
+        return res.status(401).send({ message: "Incorrect password.", remainingAttempts: req.rateLimit.remaining });
+    }
 
-    // Generate token using the refactored function
+    // Generate token
     const token = createUserToken(user);
 
     res.send({ message: "Login successful.", token });
