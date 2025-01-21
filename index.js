@@ -8,18 +8,39 @@ const Student = require("./student.js");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://Assignment:lJfAGDdoR6APLWSC@cluster0.ruowk6x.mongodb.net/?retryWrites=true&w=majority";
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
+const credentials = 'C:\\Users\\haziq\\Downloads\\AssignmentE_Database\\X509-cert-5456624090407783375.pem'
+const client = new MongoClient('mongodb+srv://cluster0.ruowk6x.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&appName=Cluster0', {
+  tlsCertificateKeyFile: credentials,
+  serverApi: ServerApiVersion.v1
 });
+
+// async function run() {
+//   try {
+//     await client.connect();
+//     const database = client.db("testDB");
+//     const collection = database.collection("testCol");
+//     const docCount = await collection.countDocuments({});
+//     console.log(docCount);
+//     // perform actions using client
+//   } finally {
+//     // Ensures that the client will close when you finish/error
+//     await client.close();
+//   }
+// }
+// run().catch(console.dir);
+
+// const { MongoClient, ServerApiVersion } = require('mongodb');
+// const uri = "mongodb+srv://Assignment:lJfAGDdoR6APLWSC@cluster0.ruowk6x.mongodb.net/?retryWrites=true&w=majority";
+
+// // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+// const client = new MongoClient(uri, {
+//     serverApi: {
+//         version: ServerApiVersion.v1,
+//         strict: true,
+//         deprecationErrors: true,
+//     }
+// });
 
 async function run() {
     try {
@@ -30,7 +51,7 @@ async function run() {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
-        //await client.close();
+        await client.close();
     }
 }
 run().catch(console.dir)
